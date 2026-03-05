@@ -15,6 +15,7 @@ import { renderDocuments } from './documents.js';
 import { showEmailModal } from './email.js';
 import { renderEmailThread } from './emailThread.js';
 import { renderMessaging } from './messaging.js';
+import { renderSms } from './sms.js';
 import { renderCampaignStats } from './campaignStats.js';
 
 // ── Toast ────────────────────────────────────────────────────
@@ -40,7 +41,8 @@ const PANES = {
   documents:     { label: 'Documents',     render: renderDocuments },
   tasks:         { label: 'Daily Tasks',   render: renderTasks },
   notifications: { label: 'Notifications', render: renderNotifications },
-  messaging:     { label: 'Messaging',     render: renderMessaging },
+  messaging:     { label: 'Email',         render: renderMessaging },
+  sms:           { label: 'SMS',           render: renderSms },
   analytics:     { label: 'Analytics',     render: renderCampaignStats },
 };
 
