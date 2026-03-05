@@ -1,0 +1,77 @@
+functionsDirectory = "/Users/anunanuuu/nevermiss-ops/claude-workspace/outputs/crm/netlify/functions"
+functionsDirectoryOrigin = "config-v1"
+redirectsOrigin = "config"
+plugins = []
+headers = []
+
+[build]
+publish = "/Users/anunanuuu/nevermiss-ops/claude-workspace/outputs/crm"
+publishOrigin = "default"
+base = "/Users/anunanuuu/nevermiss-ops/claude-workspace/outputs/crm"
+functions = "/Users/anunanuuu/nevermiss-ops/claude-workspace/outputs/crm/netlify/functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[redirects]]
+from = "/onboarding.html"
+to = "/onboarding.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/contract.html"
+to = "/contract.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/data-cleaner.html"
+to = "/data-cleaner.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

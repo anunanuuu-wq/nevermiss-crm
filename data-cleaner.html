@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeverMiss CRM — Data Cleaner</title>
+  <link rel="stylesheet" href="css/app.css">
+  <style>
+    body { background: var(--bg-secondary); padding: 32px 24px; }
+    .page { max-width: 1000px; margin: 0 auto; }
+    .page-header { margin-bottom: 28px; }
+    .page-title { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+    .page-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+    .summary-bar {
+      display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .summary-pill {
+      padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--border); background: var(--bg-primary);
+      color: var(--text-secondary);
+    }
+    .summary-pill.has-issues { background: #fffbeb; border-color: #fcd34d; color: #b45309; }
+    .summary-pill.clean     { background: #f0fdf4; border-color: #86efac; color: #15803d; }
+
+    .issue-table { width: 100%; border-collapse: collapse; }
+    .issue-table th {
+      padding: 10px 14px; text-align: left; font-size: 11.5px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em;
+      background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+    }
+    .issue-table td {
+      padding: 11px 14px; font-size: 13px; vertical-align: top;
+      border-bottom: 1px solid var(--border); color: var(--text-primary);
+    }
+    .issue-table tr:last-child td { border-bottom: none; }
+    .issue-table tr:hover td { background: var(--bg-secondary); }
+
+    .field-tag {
+      display: inline-block; padding: 1px 7px; border-radius: 4px;
+      font-size: 11px; font-weight: 700; margin-right: 4px;
+    }
+    .tag-phone   { background: #eff6ff; color: #1d4ed8; }
+    .tag-email   { background: #f0fdf4; color: #15803d; }
+    .tag-website { background: #faf5ff; color: #7c3aed; }
+
+    .change-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .change-from { color: #dc2626; text-decoration: line-through; font-size: 12px; }
+    .change-arrow { color: var(--text-faint); font-size: 12px; }
+    .change-to { color: #16a34a; font-size: 12px; font-weight: 600; }
+
+    .actions-bar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; background: var(--bg-primary);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      margin-bottom: 20px;
+    }
+
+    .progress-msg { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+    .done-banner {
+      background: #f0fdf4; border: 1px solid #86efac; border-radius: var(--radius-md);
+      padding: 20px 24px; text-align: center; display: none;
+    }
+    .done-title { font-size: 17px; font-weight: 700; color: #15803d; margin-bottom: 6px; }
+    .done-sub { font-size: 13px; color: #16a34a; }
+
+    .no-issues {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .no-issues-icon { font-size: 40px; margin-bottom: 12px; }
+    .no-issues-title { font-size: 16px; font-weight: 700; color: #15803d; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <a href="index.html" class="btn btn-secondary btn-sm">← Back to CRM</a>
+    </div>
+    <div class="page-title">Data Cleaner</div>
+    <div class="page-sub">Detects misplaced field data — phone in email, website in phone, etc. Review changes before applying.</div>
+  </div>
+
+  <div id="statusMsg" style="text-align:center;padding:40px">
+    <div class="spinner"></div>
+    <div style="margin-top:12px;color:var(--text-muted);font-size:13px">Scanning leads…</div>
+  </div>
+
+  <div id="results" style="display:none">
+    <div class="summary-bar" id="summaryBar"></div>
+
+    <div class="actions-bar" id="actionsBar" style="display:none">
+      <div>
+        <div style="font-weight:700;font-size:14px" id="issueCount"></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Review the changes below, then click Fix All to apply.</div>
+      </div>
+      <button class="btn btn-primary" id="fixAllBtn">Fix All Issues</button>
+      <div class="progress-msg" id="progressMsg"></div>
+    </div>
+
+    <div class="done-banner" id="doneBanner">
+      <div class="done-title">✓ All issues fixed</div>
+      <div class="done-sub" id="doneDetail"></div>
+    </div>
+
+    <div class="table-wrap" id="issueTableWrap" style="display:none">
+      <table class="issue-table">
+        <thead>
+          <tr>
+            <th>Business</th>
+            <th>Field</th>
+            <th>Problem</th>
+            <th>Fix</th>
+          </tr>
+        </thead>
+        <tbody id="issueBody"></tbody>
+      </table>
+    </div>
+
+    <div class="no-issues" id="noIssues" style="display:none">
+      <div class="no-issues-icon">✅</div>
+      <div class="no-issues-title">All clean — no issues found</div>
+      <div style="font-size:13px;color:var(--text-muted)">Every lead's contact fields look correct.</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="js/config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── Helpers ───────────────────────────────────────────────────
+function looksLikePhone(s) {
+  if (!s) return false;
+  const t = s.trim();
+  const digits = t.replace(/[\s\-\(\)\+\.x]/gi, '');
+  // 7-15 digits, possibly with formatting chars
+  if (/^\d{7,15}$/.test(digits)) return true;
+  if (/^[\+\(]?[\d\s\-\(\)\.]{7,18}$/.test(t) && digits.length >= 7) return true;
+  return false;
+}
+
+function looksLikeEmail(s) {
+  if (!s) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.trim());
+}
+
+function looksLikeWebsite(s) {
+  if (!s) return false;
+  const t = s.trim().toLowerCase();
+  if (t.startsWith('http://') || t.startsWith('https://') || t.startsWith('www.')) return true;
+  // domain-like: has a dot, no @, not all digits
+  if (/^[a-z0-9\-]+\.[a-z]{2,}(\/.*)?$/i.test(t) && !looksLikePhone(t)) return true;
+  return false;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg, err) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (err ? ' error' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Detect issues for one lead ────────────────────────────────
+function detectIssues(lead) {
+  const issues = [];
+  const { phone, email, website } = lead;
+
+  // phone field checks
+  if (phone) {
+    if (looksLikeEmail(phone)) {
+      issues.push({ field: 'phone', problem: 'Contains an email address', moveToField: 'email', value: phone });
+    } else if (looksLikeWebsite(phone) && !looksLikePhone(phone)) {
+      issues.push({ field: 'phone', problem: 'Contains a website URL', moveToField: 'website', value: phone });
+    }
+  }
+
+  // email field checks
+  if (email) {
+    if (looksLikePhone(email) && !looksLikeEmail(email)) {
+      issues.push({ field: 'email', problem: 'Contains a phone number', moveToField: 'phone', value: email });
+    } else if (looksLikeWebsite(email) && !looksLikeEmail(email)) {
+      issues.push({ field: 'email', problem: 'Contains a website URL', moveToField: 'website', value: email });
+    }
+  }
+
+  // website field checks
+  if (website) {
+    if (looksLikeEmail(website) && !looksLikeWebsite(website)) {
+      issues.push({ field: 'website', problem: 'Contains an email address', moveToField: 'email', value: website });
+    } else if (looksLikePhone(website) && !looksLikeWebsite(website)) {
+      issues.push({ field: 'website', problem: 'Contains a phone number', moveToField: 'phone', value: website });
+    }
+  }
+
+  return issues;
+}
+
+// ── Build the fix update object for a lead ────────────────────
+function buildFix(lead, issues) {
+  const update = {};
+  const current = { phone: lead.phone, email: lead.email, website: lead.website };
+
+  for (const issue of issues) {
+    const { field, moveToField, value } = issue;
+    // Clear the wrong field
+    update[field] = null;
+    // Move value to correct field — only if target is empty
+    if (!current[moveToField] && !update[moveToField]) {
+      update[moveToField] = value;
+    }
+  }
+  return update;
+}
+
+// ── Render ────────────────────────────────────────────────────
+function renderResults(leadsWithIssues, totalLeads) {
+  const statusMsg = document.getElementById('statusMsg');
+  const results = document.getElementById('results');
+  statusMsg.style.display = 'none';
+  results.style.display = 'block';
+
+  // Summary bar
+  const summaryBar = document.getElementById('summaryBar');
+  const issueCount = leadsWithIssues.length;
+  summaryBar.innerHTML = `
+    <div class="summary-pill">${totalLeads} leads scanned</div>
+    <div class="summary-pill ${issueCount > 0 ? 'has-issues' : 'clean'}">
+      ${issueCount > 0 ? `⚠️ ${issueCount} leads with issues` : '✓ All fields correct'}
+    </div>
+  `;
+
+  if (issueCount === 0) {
+    document.getElementById('noIssues').style.display = 'block';
+    return;
+  }
+
+  // Actions bar
+  const actionsBar = document.getElementById('actionsBar');
+  actionsBar.style.display = 'flex';
+  document.getElementById('issueCount').textContent =
+    `${issueCount} lead${issueCount !== 1 ? 's' : ''} with misplaced data`;
+
+  // Issue table
+  document.getElementById('issueTableWrap').style.display = 'block';
+  const tbody = document.getElementById('issueBody');
+
+  const tagClass = { phone: 'tag-phone', email: 'tag-email', website: 'tag-website' };
+
+  tbody.innerHTML = leadsWithIssues.map(({ lead, issues }) => {
+    const fix = buildFix(lead, issues);
+
+    const changesHtml = issues.map(issue => `
+      <div class="change-row">
+        <span class="field-tag ${tagClass[issue.field]}">${issue.field}</span>
+        <span class="change-from">${esc(issue.value)}</span>
+        <span class="change-arrow">→</span>
+        <span class="field-tag ${tagClass[issue.moveToField]}">${issue.moveToField}</span>
+        <span class="change-to">${esc(issue.value)}</span>
+      </div>
+    `).join('');
+
+    const fixSummary = Object.entries(fix).map(([field, val]) => {
+      if (val === null) return `<div style="font-size:12px;color:#dc2626">Clear <strong>${field}</strong></div>`;
+      return `<div style="font-size:12px;color:#16a34a">Set <strong>${field}</strong> = ${esc(val)}</div>`;
+    }).join('');
+
+    return `
+      <tr data-id="${lead.id}">
+        <td>
+          <div style="font-weight:600">${esc(lead.business_name)}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${esc(lead.contact_name||'')}</div>
+        </td>
+        <td>${issues.map(i => `<div><span class="field-tag ${tagClass[i.field]}">${i.field}</span></div>`).join('')}</td>
+        <td>${issues.map(i => `<div style="font-size:12px;color:#b45309;margin-bottom:3px">${i.problem}</div>`).join('')}</td>
+        <td>${fixSummary}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // Fix all button
+  document.getElementById('fixAllBtn').addEventListener('click', () => applyFixes(leadsWithIssues));
+}
+
+// ── Apply fixes ───────────────────────────────────────────────
+async function applyFixes(leadsWithIssues) {
+  const btn = document.getElementById('fixAllBtn');
+  const progress = document.getElementById('progressMsg');
+  btn.disabled = true;
+  btn.textContent = 'Fixing…';
+
+  let fixed = 0;
+  let failed = 0;
+
+  for (const { lead, issues } of leadsWithIssues) {
+    const update = buildFix(lead, issues);
+    progress.textContent = `Fixing ${fixed + 1} of ${leadsWithIssues.length}…`;
+
+    const { error } = await supabase.from('leads').update(update).eq('id', lead.id);
+    if (error) { failed++; console.error(lead.business_name, error); }
+    else fixed++;
+  }
+
+  btn.style.display = 'none';
+  progress.textContent = '';
+  document.getElementById('issueTableWrap').style.display = 'none';
+  document.getElementById('actionsBar').style.display = 'none';
+
+  const doneBanner = document.getElementById('doneBanner');
+  doneBanner.style.display = 'block';
+  document.getElementById('doneDetail').textContent =
+    `${fixed} lead${fixed !== 1 ? 's' : ''} fixed${failed ? ` · ${failed} failed (check console)` : ''} — go back to the CRM to review.`;
+
+  if (failed) showToast(`${failed} fix(es) failed — check console`, true);
+}
+
+// ── Main ──────────────────────────────────────────────────────
+async function run() {
+  // Check auth
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    document.getElementById('statusMsg').innerHTML =
+      '<div style="color:#dc2626;font-weight:600">Not logged in. <a href="login.html">Sign in first</a>, then come back here.</div>';
+    return;
+  }
+
+  // Fetch all leads
+  const { data: leads, error } = await supabase
+    .from('leads')
+    .select('id, business_name, contact_name, phone, email, website')
+    .order('business_name');
+
+  if (error) {
+    document.getElementById('statusMsg').innerHTML =
+      `<div style="color:#dc2626">Failed to load leads: ${error.message}</div>`;
+    return;
+  }
+
+  const leadsWithIssues = (leads || [])
+    .map(lead => ({ lead, issues: detectIssues(lead) }))
+    .filter(({ issues }) => issues.length > 0);
+
+  renderResults(leadsWithIssues, leads.length);
+}
+
+run();
+</script>
+</body>
+</html>

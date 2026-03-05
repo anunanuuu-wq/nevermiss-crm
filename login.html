@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeverMiss CRM — Sign In</title>
+  <link rel="stylesheet" href="css/app.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-secondary); }
+    .login-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
+    .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+    .login-logo-mark { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 16px; }
+    .login-logo-text { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+    .login-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .login-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+    .login-error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .login-error.visible { display: block; }
+    .login-btn { width: 100%; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">NM</div>
+      <div class="login-logo-text">NeverMiss CRM</div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Sign in to your CRM dashboard</div>
+
+    <div class="login-error" id="loginError"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="email" placeholder="okama@nevermisshawaii.com" required autofocus>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg login-btn" id="loginBtn">
+        Sign In
+      </button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // Inline config check
+    const url = typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : null;
+    const key = typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : null;
+
+    const form = document.getElementById('loginForm');
+    const errorEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.classList.add('visible');
+    }
+
+    async function init() {
+      if (!url || url === 'YOUR_SUPABASE_URL_HERE') {
+        showError('Supabase not configured yet. Open js/config.js and add your project URL and anon key.');
+        btn.disabled = true;
+        return;
+      }
+
+      const supabase = createClient(url, key);
+
+      // Already logged in?
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) { window.location.href = '/index.html'; return; }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.classList.remove('visible');
+        btn.textContent = 'Signing in…';
+        btn.disabled = true;
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          window.location.href = '/index.html';
+        } catch (err) {
+          showError(err.message || 'Sign in failed. Check your credentials.');
+          btn.textContent = 'Sign In';
+          btn.disabled = false;
+        }
+      });
+    }
+
+    init();
+  </script>
+  <script src="js/config.js"></script>
+</body>
+</html>

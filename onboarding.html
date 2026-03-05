@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeverMiss Hawaii — Client Onboarding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:    #6366f1;
+      --accent-h:  #4f46e5;
+      --accent-l:  #eef2ff;
+      --navy:      #0f172a;
+      --text:      #1e293b;
+      --muted:     #64748b;
+      --faint:     #94a3b8;
+      --border:    #e2e8f0;
+      --bg:        #f8fafc;
+      --surface:   #ffffff;
+      --success:   #16a34a;
+      --radius:    10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--navy);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+    .logo-name { color: #fff; font-weight: 700; font-size: 15px; }
+    .logo-sub  { color: rgba(255,255,255,.5); font-size: 12px; }
+
+    /* ── Page hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e3a8a 100%);
+      padding: 40px 24px 36px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero-tag  { display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.9); font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px; }
+    .hero-title { font-size: clamp(22px, 4vw, 30px); font-weight: 800; margin-bottom: 8px; }
+    .hero-sub   { font-size: 14.5px; opacity: .75; max-width: 500px; margin: 0 auto; }
+    .biz-name   { color: #a5f3fc; font-weight: 700; }
+
+    /* ── Progress ── */
+    .progress-wrap { background: var(--navy); padding: 0 24px 20px; }
+    .progress-bar  { height: 4px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; max-width: 600px; margin: 0 auto; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s ease; width: 0%; }
+
+    /* ── Container ── */
+    .container { max-width: 680px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ── Section card ── */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .section-num  { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: var(--accent); color: #fff; border-radius: 50%; font-size: 12px; font-weight: 700; margin-right: 10px; flex-shrink: 0; }
+    .section-head { display: flex; align-items: center; margin-bottom: 22px; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .section-sub  { font-size: 13px; color: var(--muted); margin-top: 1px; }
+
+    /* ── Form ── */
+    .form-group   { margin-bottom: 18px; }
+    .form-label   { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .form-label .req { color: #ef4444; margin-left: 2px; }
+    .form-hint    { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font: inherit; font-size: 14px;
+      color: var(--text); background: var(--surface);
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+    .form-textarea { min-height: 90px; resize: vertical; line-height: 1.6; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* Radio / Checkbox groups */
+    .radio-group, .check-group { display: flex; flex-direction: column; gap: 10px; }
+    .radio-row, .check-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 12px 14px;
+      cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .radio-row:hover, .check-row:hover { border-color: var(--accent); background: var(--accent-l); }
+    .radio-row input[type=radio], .check-row input[type=checkbox] { margin-top: 3px; accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+    .radio-label { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .radio-sub   { font-size: 12px; color: var(--muted); }
+
+    /* Mode cards */
+    .mode-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all .15s; }
+    .mode-card:hover { border-color: var(--accent); background: var(--accent-l); }
+    .mode-card.selected { border-color: var(--accent); background: var(--accent-l); }
+    .mode-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .mode-card-top input { accent-color: var(--accent); width: 17px; height: 17px; cursor: pointer; }
+    .mode-card-title { font-weight: 700; font-size: 14px; color: var(--navy); }
+    .mode-card-badge { margin-left: auto; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+    .mode-card-desc { font-size: 13px; color: var(--muted); padding-left: 27px; }
+
+    /* FAQ rows */
+    .faq-row { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+    .faq-num  { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+
+    /* Days row */
+    .days-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .day-chip {
+      padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--border); color: var(--muted); cursor: pointer;
+      transition: all .15s; user-select: none;
+    }
+    .day-chip.checked { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%; padding: 14px; background: var(--accent); color: #fff;
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background .15s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .submit-btn:hover { background: var(--accent-h); }
+    .submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+    /* States */
+    #errorScreen, #successScreen { display: none; }
+    .state-card { max-width: 500px; margin: 60px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; }
+    .state-icon { font-size: 48px; margin-bottom: 16px; }
+    .state-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .state-sub   { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .success-steps { text-align: left; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px; }
+    .success-step { display: flex; gap: 12px; margin-bottom: 14px; }
+    .step-num { width: 24px; height: 24px; background: var(--accent); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-text { font-size: 13.5px; color: var(--text); }
+
+    .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .validation-msg { font-size: 12px; color: #ef4444; margin-top: 4px; display: none; }
+    .form-input.invalid, .form-select.invalid { border-color: #ef4444; }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .section-card { padding: 20px 16px; }
+      .hero { padding: 30px 16px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-mark">NM</div>
+  <div>
+    <div class="logo-name">NeverMiss Hawaii</div>
+    <div class="logo-sub">24/7 AI Receptionist</div>
+  </div>
+</div>
+
+<div id="loadingScreen">
+  <div class="hero">
+    <div class="hero-tag">Client Onboarding</div>
+    <div class="hero-title">Loading your form…</div>
+  </div>
+  <div class="container" style="text-align:center;padding-top:60px">
+    <div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto"></div>
+  </div>
+</div>
+
+<div id="errorScreen">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title">Invalid Link</div>
+      <div class="state-sub" id="errorMsg">This onboarding link is invalid or has expired. Please contact NeverMiss Hawaii for a new link.<br><br><a href="mailto:okama@nevermisshawaii.com">okama@nevermisshawaii.com</a> · (808) 724-3713</div>
+    </div>
+  </div>
+</div>
+
+<div id="successScreen">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">🎉</div>
+      <div class="state-title">You're all set!</div>
+      <div class="state-sub">Thank you for completing your onboarding questionnaire. We have everything we need to configure your AI receptionist.</div>
+      <div class="success-steps">
+        <div class="success-step"><div class="step-num">1</div><div class="step-text"><strong>Setup begins immediately</strong> — our team starts configuring your AI now.</div></div>
+        <div class="success-step"><div class="step-num">2</div><div class="step-text"><strong>Test call within 48 hours</strong> — we'll call you to test the AI together.</div></div>
+        <div class="success-step"><div class="step-num">3</div><div class="step-text"><strong>Go live</strong> — forward your calls and start capturing every lead.</div></div>
+      </div>
+      <div style="margin-top:20px;font-size:13px;color:var(--muted)">Questions? Call or text Anu at <strong>(808) 724-3713</strong></div>
+    </div>
+  </div>
+</div>
+
+<div id="alreadySubmittedScreen" style="display:none">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">✅</div>
+      <div class="state-title">Already Submitted</div>
+      <div class="state-sub">We already have your onboarding information on file. Your AI is being configured.<br><br>Need to make changes? Call Anu at <strong>(808) 724-3713</strong></div>
+    </div>
+  </div>
+</div>
+
+<div id="mainContent" style="display:none">
+  <div class="hero">
+    <div class="hero-tag">Client Onboarding</div>
+    <div class="hero-title">Welcome, <span class="biz-name" id="heroName">your business</span>!</div>
+    <div class="hero-sub">Fill out this questionnaire so we can configure your AI receptionist. Takes about 5–10 minutes.</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="container">
+    <form id="onboardingForm" novalidate>
+
+      <!-- Section 1: Business Info -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">1</div>
+          <div><div class="section-title">Business Info</div><div class="section-sub">Confirm your details</div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Name <span class="req">*</span></label>
+          <input class="form-input" id="f_business_name" required placeholder="Aloha Auto Spa">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Industry / Service Type <span class="req">*</span></label>
+            <select class="form-select" id="f_industry" required>
+              <option value="">Select…</option>
+              <option>Plumbing</option>
+              <option>HVAC</option>
+              <option>Electrical</option>
+              <option>Dental</option>
+              <option>Auto Repair</option>
+              <option>Landscaping</option>
+              <option>Cleaning</option>
+              <option>Pest Control</option>
+              <option>Solar</option>
+              <option>Roofing</option>
+              <option>Legal</option>
+              <option>Medical</option>
+              <option>Fitness</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Service Area</label>
+            <input class="form-input" id="f_service_area" placeholder="All Oahu, Honolulu + surrounding">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Address</label>
+          <input class="form-input" id="f_address" placeholder="123 Kalakaua Ave, Honolulu, HI 96815">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Website</label>
+          <input class="form-input" id="f_website" type="url" placeholder="https://yoursite.com">
+        </div>
+      </div>
+
+      <!-- Section 2: Contact Info -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">2</div>
+          <div><div class="section-title">Contact Info</div><div class="section-sub">Who should we coordinate with?</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name <span class="req">*</span></label>
+            <input class="form-input" id="f_contact_name" required placeholder="John Kahananui">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Direct Phone <span class="req">*</span></label>
+            <input class="form-input" id="f_contact_phone" required type="tel" placeholder="(808) 555-0100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Email <span class="req">*</span></label>
+          <input class="form-input" id="f_contact_email" required type="email" placeholder="john@yoursite.com">
+          <div class="form-hint">Call summaries and reports will be sent here</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Phone Number to Forward to AI <span class="req">*</span></label>
+          <input class="form-input" id="f_business_phone" required type="tel" placeholder="(808) 555-1234">
+          <div class="form-hint">This is the number your customers call. You'll set up call forwarding on this line.</div>
+        </div>
+      </div>
+
+      <!-- Section 3: Service Mode -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">3</div>
+          <div><div class="section-title">Service Mode <span style="color:#ef4444;font-weight:700">*</span></div><div class="section-sub">How should your AI handle calls?</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <label class="mode-card" id="modeCard1">
+            <div class="mode-card-top">
+              <input type="radio" name="service_mode" value="auto" id="mode_auto">
+              <div class="mode-card-title">Mode 1 — Auto-Booking</div>
+              <div class="mode-card-badge">Most Popular</div>
+            </div>
+            <div class="mode-card-desc">AI books appointments directly to your calendar. Callers get confirmed times without waiting. You show up and close.</div>
+          </label>
+          <label class="mode-card" id="modeCard2">
+            <div class="mode-card-top">
+              <input type="radio" name="service_mode" value="transfer" id="mode_transfer">
+              <div class="mode-card-title">Mode 2 — Lead Capture + Transfer</div>
+            </div>
+            <div class="mode-card-desc">AI qualifies the caller (name, service needed, urgency) and transfers hot prospects to you live. Best for high-ticket services.</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Section 4: Calendar (shown only for Mode 1) -->
+      <div class="section-card" id="calendarSection">
+        <div class="section-head">
+          <div class="section-num">4</div>
+          <div><div class="section-title">Calendar Integration</div><div class="section-sub">So the AI can book appointments for you</div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Calendar System <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-row"><input type="radio" name="calendar_type" value="google"> <div><div class="radio-label">Google Calendar</div><div class="radio-sub">Most common — we'll need your Google Calendar link</div></div></label>
+            <label class="radio-row"><input type="radio" name="calendar_type" value="calcom"> <div><div class="radio-label">Cal.com</div><div class="radio-sub">Paste your Cal.com booking link below</div></div></label>
+            <label class="radio-row"><input type="radio" name="calendar_type" value="outlook"> <div><div class="radio-label">Outlook / Microsoft 365</div><div class="radio-sub">We'll set up a Booking page</div></div></label>
+            <label class="radio-row"><input type="radio" name="calendar_type" value="other"> <div><div class="radio-label">Other / I'll describe below</div></div></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Booking Link or Calendar Email</label>
+          <input class="form-input" id="f_calendar_link" placeholder="https://cal.com/yourbusiness or yourname@gmail.com">
+          <div class="form-hint">We use this to configure the calendar integration</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Available Days</label>
+          <div class="days-row" id="daysRow">
+            <div class="day-chip checked" data-day="Mon">Mon</div>
+            <div class="day-chip checked" data-day="Tue">Tue</div>
+            <div class="day-chip checked" data-day="Wed">Wed</div>
+            <div class="day-chip checked" data-day="Thu">Thu</div>
+            <div class="day-chip checked" data-day="Fri">Fri</div>
+            <div class="day-chip" data-day="Sat">Sat</div>
+            <div class="day-chip" data-day="Sun">Sun</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Opening Time</label>
+            <input class="form-input" id="f_hours_start" type="time" value="08:00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Closing Time</label>
+            <input class="form-input" id="f_hours_end" type="time" value="17:00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Appointment Duration</label>
+          <select class="form-select" id="f_appt_duration">
+            <option value="30">30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60" selected>1 hour</option>
+            <option value="90">1.5 hours</option>
+            <option value="120">2 hours</option>
+            <option value="varies">Varies by service</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section 5: Top 5 FAQs -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">5</div>
+          <div><div class="section-title">Top 5 Customer Questions</div><div class="section-sub">The better you fill this out, the smarter your AI will be</div></div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:18px">What do your customers most often ask when they call? Your AI will use these answers when speaking with callers.</p>
+        <div id="faqContainer">
+          <!-- FAQs rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Section 6: Pricing & Service Info -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">6</div>
+          <div><div class="section-title">Pricing & Service Info</div><div class="section-sub">So the AI can answer "how much does it cost?"</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Are estimates free?</label>
+            <div class="radio-group">
+              <label class="radio-row"><input type="radio" name="estimates_policy" value="free" checked> <div><div class="radio-label">Free estimates</div></div></label>
+              <label class="radio-row"><input type="radio" name="estimates_policy" value="fee"> <div><div class="radio-label">Fee applies</div></div></label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Average Job Value</label>
+            <input class="form-input" id="f_avg_job_value" placeholder="$500–$2,000">
+            <div class="form-hint">Rough range is fine</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Do you offer emergency / after-hours service?</label>
+          <div class="radio-group">
+            <label class="radio-row"><input type="radio" name="emergency_service" value="yes"> <div><div class="radio-label">Yes — we take emergency calls</div></div></label>
+            <label class="radio-row"><input type="radio" name="emergency_service" value="no" checked> <div><div class="radio-label">No — we only take scheduled calls</div></div></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7: AI Voice -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">7</div>
+          <div><div class="section-title">AI Voice Preferences</div><div class="section-sub">Customize how your AI sounds</div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Voice Style</label>
+          <div class="radio-group">
+            <label class="radio-row"><input type="radio" name="voice_style" value="friendly" checked> <div><div class="radio-label">Friendly & Casual</div><div class="radio-sub">Warm, approachable, conversational</div></div></label>
+            <label class="radio-row"><input type="radio" name="voice_style" value="professional"> <div><div class="radio-label">Professional</div><div class="radio-sub">Polished, formal, efficient</div></div></label>
+            <label class="radio-row"><input type="radio" name="voice_style" value="warm_hawaiian"> <div><div class="radio-label">Warm & Hawaiian</div><div class="radio-sub">Aloha spirit — warm, local, community feel</div></div></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">AI Name</label>
+          <input class="form-input" id="f_ai_name" value="Leilani" placeholder="Leilani">
+          <div class="form-hint">This is what callers will hear ("Hi, this is Leilani from…")</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Greeting Script</label>
+          <textarea class="form-textarea" id="f_greeting_script" style="min-height:80px">Aloha! Thank you for calling [Business Name]. This is Leilani. How can I help you today?</textarea>
+          <div class="form-hint">Customize how the AI answers. Keep [Business Name] where you want the business name spoken.</div>
+        </div>
+      </div>
+
+      <!-- Section 8: Go-Live -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">8</div>
+          <div><div class="section-title">Go-Live Details</div><div class="section-sub">Almost done!</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Go-Live Date</label>
+            <input class="form-input" id="f_golive_date" type="date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Best Time for a Test Call</label>
+            <input class="form-input" id="f_test_time" placeholder="e.g. Mon 2pm HST">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Anything else we should know?</label>
+          <textarea class="form-textarea" id="f_additional_notes" placeholder="Special instructions, seasonal hours, services to avoid booking without approval, VIP clients, etc."></textarea>
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-num">✓</div>
+          <div><div class="section-title">Sign & Submit</div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type Your Full Name to Sign <span class="req">*</span></label>
+          <input class="form-input" id="f_signer_name" required placeholder="John Kahananui" style="font-size:16px">
+          <div class="form-hint">By submitting, you confirm the information above is accurate</div>
+        </div>
+        <div style="background:var(--accent-l);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#4338ca;line-height:1.6">
+          By submitting this form, you authorize NeverMiss Hawaii to configure an AI receptionist for your business using the information provided above.
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span id="submitText">Submit Onboarding Form</span>
+          <div class="spinner" id="submitSpinner" style="display:none"></div>
+        </button>
+        <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px">Questions? Call Anu at (808) 724-3713</div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const leadId = params.get('id');
+
+function show(id) {
+  ['loadingScreen','errorScreen','successScreen','alreadySubmittedScreen','mainContent']
+    .forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = msg;
+  show('errorScreen');
+}
+
+// ── Build FAQ fields ─────────────────────────────────────────
+const faqContainer = document.getElementById('faqContainer');
+for (let i = 1; i <= 5; i++) {
+  faqContainer.innerHTML += `
+    <div class="faq-row">
+      <div class="faq-num">FAQ #${i}</div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label class="form-label" style="font-size:12px">Question</label>
+        <input class="form-input" id="faq${i}q" placeholder="What's your most common question?">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" style="font-size:12px">Answer the AI should give</label>
+        <textarea class="form-textarea" id="faq${i}a" style="min-height:70px" placeholder="How the AI should respond…"></textarea>
+      </div>
+    </div>
+  `;
+}
+
+// ── Days chips ───────────────────────────────────────────────
+document.querySelectorAll('.day-chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('checked'));
+});
+
+// ── Mode card toggle ─────────────────────────────────────────
+document.querySelectorAll('[name="service_mode"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('modeCard1').classList.toggle('selected', document.getElementById('mode_auto').checked);
+    document.getElementById('modeCard2').classList.toggle('selected', document.getElementById('mode_transfer').checked);
+  });
+});
+
+// ── Progress bar ─────────────────────────────────────────────
+const requiredFields = ['f_business_name','f_industry','f_contact_name','f_contact_phone','f_contact_email','f_business_phone','f_signer_name'];
+function updateProgress() {
+  const filled = requiredFields.filter(id => {
+    const el = document.getElementById(id);
+    return el && el.value.trim();
+  }).length;
+  const serviceModeSet = document.querySelector('[name="service_mode"]:checked');
+  const total = requiredFields.length + 1;
+  const done = filled + (serviceModeSet ? 1 : 0);
+  document.getElementById('progressFill').style.width = Math.round(done / total * 100) + '%';
+}
+document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', updateProgress));
+
+// ── Set min go-live date ─────────────────────────────────────
+const minDate = new Date(); minDate.setDate(minDate.getDate() + 2);
+document.getElementById('f_golive_date').min = minDate.toISOString().split('T')[0];
+
+// ── Submit ───────────────────────────────────────────────────
+document.getElementById('onboardingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const required = [
+    { id: 'f_business_name', label: 'Business Name' },
+    { id: 'f_contact_name',  label: 'Contact Name' },
+    { id: 'f_contact_phone', label: 'Your Phone' },
+    { id: 'f_contact_email', label: 'Your Email' },
+    { id: 'f_business_phone', label: 'Business Phone' },
+    { id: 'f_signer_name',   label: 'Signature' },
+  ];
+
+  let valid = true;
+  required.forEach(({ id, label }) => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.classList.add('invalid');
+      valid = false;
+    } else el.classList.remove('invalid');
+  });
+
+  if (!document.querySelector('[name="service_mode"]:checked')) {
+    alert('Please select a Service Mode (Section 3)');
+    valid = false;
+  }
+
+  if (!valid) {
+    document.querySelector('.form-input.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  document.getElementById('submitText').style.display = 'none';
+  document.getElementById('submitSpinner').style.display = 'block';
+  btn.disabled = true;
+
+  const days = [...document.querySelectorAll('.day-chip.checked')].map(c => c.dataset.day).join(',');
+
+  const payload = {
+    lead_id: leadId,
+    business_name:    document.getElementById('f_business_name').value.trim(),
+    industry:         document.getElementById('f_industry').value,
+    address:          document.getElementById('f_address').value.trim(),
+    website:          document.getElementById('f_website').value.trim(),
+    contact_name:     document.getElementById('f_contact_name').value.trim(),
+    contact_email:    document.getElementById('f_contact_email').value.trim(),
+    contact_phone:    document.getElementById('f_contact_phone').value.trim(),
+    business_phone:   document.getElementById('f_business_phone').value.trim(),
+    service_mode:     document.querySelector('[name="service_mode"]:checked')?.value,
+    calendar_type:    document.querySelector('[name="calendar_type"]:checked')?.value || null,
+    available_days:   days,
+    hours_start:      document.getElementById('f_hours_start').value,
+    hours_end:        document.getElementById('f_hours_end').value,
+    appt_duration:    document.getElementById('f_appt_duration').value,
+    faq_1_q: document.getElementById('faq1q').value.trim(), faq_1_a: document.getElementById('faq1a').value.trim(),
+    faq_2_q: document.getElementById('faq2q').value.trim(), faq_2_a: document.getElementById('faq2a').value.trim(),
+    faq_3_q: document.getElementById('faq3q').value.trim(), faq_3_a: document.getElementById('faq3a').value.trim(),
+    faq_4_q: document.getElementById('faq4q').value.trim(), faq_4_a: document.getElementById('faq4a').value.trim(),
+    faq_5_q: document.getElementById('faq5q').value.trim(), faq_5_a: document.getElementById('faq5a').value.trim(),
+    estimates_policy: document.querySelector('[name="estimates_policy"]:checked')?.value,
+    avg_job_value:    document.getElementById('f_avg_job_value').value.trim(),
+    emergency_service: document.querySelector('[name="emergency_service"]:checked')?.value === 'yes',
+    service_area:     document.getElementById('f_service_area').value.trim(),
+    voice_style:      document.querySelector('[name="voice_style"]:checked')?.value,
+    ai_name:          document.getElementById('f_ai_name').value.trim(),
+    greeting_script:  document.getElementById('f_greeting_script').value.trim(),
+    target_golive_date: document.getElementById('f_golive_date').value || null,
+    best_test_time:   document.getElementById('f_test_time').value.trim(),
+    additional_notes: document.getElementById('f_additional_notes').value.trim(),
+    signer_name:      document.getElementById('f_signer_name').value.trim(),
+    signer_date:      new Date().toISOString().split('T')[0],
+    status:           'submitted',
+  };
+
+  try {
+    // Insert onboarding submission
+    const { error: subError } = await supabase.from('onboarding_submissions').insert(payload);
+    if (subError) throw subError;
+
+    // Update lead status
+    await supabase.from('leads').update({ onboarding_status: 'submitted' }).eq('id', leadId);
+
+    // Add note to lead
+    await supabase.from('lead_notes').insert({
+      lead_id: leadId,
+      content: `Onboarding form submitted by ${payload.signer_name} on ${new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}. Mode: ${payload.service_mode === 'auto' ? 'Auto-Booking' : 'Lead Capture + Transfer'}. Go-live: ${payload.target_golive_date || 'TBD'}.`
+    });
+
+    // Add notification
+    await supabase.from('notifications').insert({
+      lead_id: leadId,
+      type: 'onboarding_submitted',
+      message: `${payload.business_name} submitted their onboarding form — ready for AI setup`
+    });
+
+    show('successScreen');
+  } catch (err) {
+    console.error(err);
+    alert('Submission failed: ' + (err.message || 'Please try again or contact (808) 724-3713'));
+    document.getElementById('submitText').style.display = 'inline';
+    document.getElementById('submitSpinner').style.display = 'none';
+    btn.disabled = false;
+  }
+});
+
+// ── Init ─────────────────────────────────────────────────────
+async function init() {
+  if (!leadId) { showError('No lead ID in URL. Please use the link provided by NeverMiss Hawaii.'); return; }
+
+  // Check for existing submission
+  const { data: existing } = await supabase
+    .from('onboarding_submissions')
+    .select('id')
+    .eq('lead_id', leadId)
+    .maybeSingle();
+
+  if (existing) { show('alreadySubmittedScreen'); return; }
+
+  // Get business name
+  const { data: lead, error } = await supabase
+    .from('leads')
+    .select('business_name, contact_name, email, phone, website')
+    .eq('id', leadId)
+    .maybeSingle();
+
+  if (error || !lead) { showError('Lead not found. Please contact NeverMiss Hawaii for a valid link.'); return; }
+
+  // Pre-fill
+  document.getElementById('heroName').textContent = lead.business_name || 'your business';
+  document.getElementById('f_business_name').value = lead.business_name || '';
+  if (lead.contact_name) document.getElementById('f_contact_name').value = lead.contact_name;
+  if (lead.email)        document.getElementById('f_contact_email').value = lead.email;
+  if (lead.phone)        document.getElementById('f_contact_phone').value = lead.phone;
+  if (lead.website)      document.getElementById('f_website').value = lead.website;
+
+  document.title = `NeverMiss — ${lead.business_name} Onboarding`;
+
+  // Mark onboarding as sent
+  await supabase.from('leads').update({ onboarding_status: 'sent' }).eq('id', leadId).eq('onboarding_status', 'not sent');
+
+  show('mainContent');
+  updateProgress();
+}
+
+init();
+</script>
+</body>
+</html>

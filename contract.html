@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeverMiss Hawaii — Service Agreement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:  #6366f1;
+      --accent-h:#4f46e5;
+      --accent-l:#eef2ff;
+      --navy:    #0f172a;
+      --text:    #1e293b;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --bg:      #f8fafc;
+      --surface: #ffffff;
+      --radius:  10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    .topbar { background: var(--navy); padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+    .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+    .logo-name { color: #fff; font-weight: 700; font-size: 15px; }
+    .logo-sub  { color: rgba(255,255,255,.5); font-size: 12px; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e3a8a 100%);
+      padding: 36px 24px 32px; text-align: center; color: #fff;
+    }
+    .hero-tag   { display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.9); font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px; }
+    .hero-title { font-size: clamp(20px, 4vw, 28px); font-weight: 800; margin-bottom: 6px; }
+    .hero-date  { font-size: 13.5px; opacity: .65; }
+    .biz-name   { color: #a5f3fc; }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* Contract sections */
+    .contract-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 28px;
+      margin-bottom: 16px;
+    }
+    .cs-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .cs-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--navy); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .cs-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+
+    .parties-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .party-box { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; }
+    .party-role { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .party-name { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+    .party-detail { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    /* Editable client fields */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .form-label .req { color: #ef4444; }
+    .form-input, .form-select { width: 100%; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: var(--radius); font: inherit; font-size: 14px; color: var(--text); background: var(--surface); outline: none; transition: border-color .15s, box-shadow .15s; }
+    .form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.12); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* Term rows */
+    .term-list { list-style: none; }
+    .term-list li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; color: var(--text); }
+    .term-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .term-list li::before { content: '✓'; color: var(--accent); font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+
+    /* Pricing card */
+    .pricing-card {
+      background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+      border-radius: 12px; padding: 20px 24px; color: #fff; margin-bottom: 14px;
+    }
+    .price-label { font-size: 12px; font-weight: 600; opacity: .75; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+    .price-amount { font-size: 32px; font-weight: 800; }
+    .price-period { font-size: 14px; opacity: .75; }
+    .price-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .price-detail-item { background: rgba(255,255,255,.12); border-radius: 8px; padding: 10px 12px; }
+    .pdl { font-size: 11px; opacity: .75; margin-bottom: 2px; }
+    .pdv { font-size: 14px; font-weight: 700; }
+
+    /* SLA grid */
+    .sla-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .sla-item { background: var(--bg); border-radius: 8px; padding: 12px 14px; }
+    .sla-val { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 2px; }
+    .sla-label { font-size: 12px; color: var(--muted); }
+
+    /* Mode selection */
+    .mode-card { border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all .15s; }
+    .mode-card:hover { border-color: var(--accent); background: var(--accent-l); }
+    .mode-card.selected { border-color: var(--accent); background: var(--accent-l); }
+    .mode-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .mode-card-top input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+    .mode-card-title { font-weight: 700; font-size: 14px; color: var(--navy); }
+    .mode-card-desc { font-size: 13px; color: var(--muted); padding-left: 26px; }
+
+    /* Guarantee */
+    .guarantee-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+    .guarantee-icon { font-size: 22px; flex-shrink: 0; }
+    .guarantee-text strong { color: #15803d; }
+    .guarantee-text { font-size: 13px; color: #166534; line-height: 1.6; }
+
+    /* Signature */
+    .sig-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Georgia', serif;
+      font-size: 22px;
+      color: var(--navy);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      text-align: center;
+    }
+    .sig-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.12); }
+    .sig-input::placeholder { font-family: 'Inter', sans-serif; font-size: 15px; color: var(--muted); }
+    .sig-date { text-align: center; font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+    .sign-btn {
+      width: 100%; padding: 16px; background: var(--accent); color: #fff;
+      border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: background .15s; margin-top: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .sign-btn:hover:not(:disabled) { background: var(--accent-h); }
+    .sign-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+    .legal-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; line-height: 1.6; }
+
+    /* State screens */
+    .state-card { max-width: 520px; margin: 60px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; }
+    .state-icon { font-size: 48px; margin-bottom: 16px; }
+    .state-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .state-sub   { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .next-steps { text-align: left; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px; }
+    .next-step { display: flex; gap: 12px; margin-bottom: 14px; }
+    .ns-num { width: 26px; height: 26px; background: var(--accent); color: #fff; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .ns-text { font-size: 13.5px; color: var(--text); line-height: 1.6; }
+
+    .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .parties-grid, .price-details, .sla-grid, .form-row { grid-template-columns: 1fr; }
+      .contract-section { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-mark">NM</div>
+  <div>
+    <div class="logo-name">NeverMiss Hawaii</div>
+    <div class="logo-sub">Service Agreement</div>
+  </div>
+</div>
+
+<!-- Error -->
+<div id="errorScreen" style="display:none">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title">Invalid Link</div>
+      <div class="state-sub" id="errorMsg">This contract link is invalid. Please contact NeverMiss Hawaii.<br><br><a href="mailto:okama@nevermisshawaii.com">okama@nevermisshawaii.com</a> · (808) 724-3713</div>
+    </div>
+  </div>
+</div>
+
+<!-- Already signed -->
+<div id="alreadySignedScreen" style="display:none">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">✅</div>
+      <div class="state-title">Agreement Already Signed</div>
+      <div class="state-sub" id="alreadySignedMsg">This agreement has already been signed. Thank you!<br><br>Questions? Contact Anu at <strong>(808) 724-3713</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- Success -->
+<div id="successScreen" style="display:none">
+  <div class="container">
+    <div class="state-card">
+      <div class="state-icon">🤝</div>
+      <div class="state-title">Welcome to NeverMiss Hawaii!</div>
+      <div class="state-sub">Your service agreement is signed and on file. We're excited to have you on board.</div>
+      <div class="next-steps">
+        <div class="next-step"><div class="ns-num">1</div><div class="ns-text"><strong>You'll receive a confirmation email</strong> with a copy of this agreement shortly.</div></div>
+        <div class="next-step"><div class="ns-num">2</div><div class="ns-text"><strong>We'll reach out within 24 hours</strong> to schedule your onboarding call and send your Stripe payment link.</div></div>
+        <div class="next-step"><div class="ns-num">3</div><div class="ns-text"><strong>Your AI goes live in 48 hours</strong> after onboarding is complete — every missed call starts getting answered.</div></div>
+      </div>
+      <div style="margin-top:20px;font-size:13px;color:var(--muted)">Questions? Call or text Anu at <strong>(808) 724-3713</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div id="loadingScreen">
+  <div class="hero"><div class="hero-tag">Service Agreement</div><div class="hero-title">Loading agreement…</div></div>
+  <div class="container" style="text-align:center;padding-top:60px">
+    <div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto"></div>
+  </div>
+</div>
+
+<!-- Main contract content -->
+<div id="mainContent" style="display:none">
+  <div class="hero">
+    <div class="hero-tag">Service Agreement</div>
+    <div class="hero-title">NeverMiss Hawaii<br><span class="biz-name" id="heroBizName"></span></div>
+    <div class="hero-date" id="heroDate"></div>
+  </div>
+
+  <div class="container">
+
+    <!-- 1. Parties -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">1</div><div class="cs-title">Parties to This Agreement</div></div>
+      <div class="parties-grid">
+        <div class="party-box">
+          <div class="party-role">Service Provider</div>
+          <div class="party-name">NeverMiss Hawaii</div>
+          <div class="party-detail">okama@nevermisshawaii.com<br>(808) 724-3713<br>Hawaii, United States</div>
+        </div>
+        <div class="party-box">
+          <div class="party-role">Client — Your Information</div>
+          <div id="clientInfoDisplay" style="font-size:13.5px;color:var(--text);line-height:1.8"></div>
+        </div>
+      </div>
+      <div style="margin-top:20px">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">Confirm or update your details</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Business Name <span class="req">*</span></label><input class="form-input" id="c_biz_name" required></div>
+          <div class="form-group"><label class="form-label">Contact Name <span class="req">*</span></label><input class="form-input" id="c_contact_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input class="form-input" id="c_email" type="email" required></div>
+          <div class="form-group"><label class="form-label">Phone <span class="req">*</span></label><input class="form-input" id="c_phone" type="tel" required></div>
+        </div>
+        <div class="form-group"><label class="form-label">Business Address</label><input class="form-input" id="c_address" placeholder="123 Kalakaua Ave, Honolulu, HI 96815"></div>
+      </div>
+    </div>
+
+    <!-- 2. Services -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">2</div><div class="cs-title">Services Provided</div></div>
+      <ul class="term-list">
+        <li>AI receptionist answering your calls 24 hours a day, 7 days a week — including after hours, weekends, and holidays</li>
+        <li>Lead capture and qualification — every caller's name, number, and reason for calling recorded instantly</li>
+        <li>Appointment booking directly to your calendar (Mode 1) or live hot-transfer to you (Mode 2)</li>
+        <li>SMS and email notification within 60 seconds of every new lead or booking</li>
+        <li>Call summary and recording access via your NeverMiss dashboard</li>
+        <li>Initial 30–45 minute onboarding call, AI knowledge base setup, calendar integration, and testing</li>
+        <li>Go-live within 48 hours of completed onboarding questionnaire</li>
+      </ul>
+    </div>
+
+    <!-- 3. Service Mode -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">3</div><div class="cs-title">Service Mode Selection <span style="color:#ef4444">*</span></div></div>
+      <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">Select how your AI will handle incoming calls. This can be changed at any time.</p>
+      <label class="mode-card" id="modeCard1">
+        <div class="mode-card-top"><input type="radio" name="svc_mode" value="auto" id="svc_auto"><div class="mode-card-title">Mode 1 — Auto-Booking</div></div>
+        <div class="mode-card-desc">AI books appointments directly to your calendar. Callers get confirmed appointment times without waiting for a callback.</div>
+      </label>
+      <label class="mode-card" id="modeCard2">
+        <div class="mode-card-top"><input type="radio" name="svc_mode" value="transfer" id="svc_transfer"><div class="mode-card-title">Mode 2 — Lead Capture + Hot Transfer</div></div>
+        <div class="mode-card-desc">AI qualifies the caller (name, service needed, urgency) and transfers hot prospects live to your phone.</div>
+      </label>
+    </div>
+
+    <!-- 4. Pricing -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">4</div><div class="cs-title">Term & Pricing</div></div>
+      <div class="pricing-card">
+        <div class="price-label">Monthly Service Fee</div>
+        <div><span class="price-amount">$300</span><span class="price-period">/month</span></div>
+        <div class="price-details">
+          <div class="price-detail-item"><div class="pdl">Setup Fee</div><div class="pdv" id="setupFeeDisplay">$0 (Waived)</div></div>
+          <div class="price-detail-item"><div class="pdl">Included Monthly Hours</div><div class="pdv" id="hoursDisplay">40 hours</div></div>
+          <div class="price-detail-item"><div class="pdl">Contract Term</div><div class="pdv">Month-to-month</div></div>
+          <div class="price-detail-item"><div class="pdl">Billing Starts</div><div class="pdv">On go-live date</div></div>
+        </div>
+      </div>
+      <ul class="term-list">
+        <li>Stripe payment link sent immediately after this agreement is signed</li>
+        <li>Billing cycle begins on your go-live date — not before</li>
+        <li>Monthly auto-renewal — billed on the same date each month</li>
+        <li>7-day grace period for late payments before service pause</li>
+        <li>No per-call charges, no overages within your included hours</li>
+      </ul>
+    </div>
+
+    <!-- 5. SLA -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">5</div><div class="cs-title">Service Level Guarantee</div></div>
+      <div class="sla-grid" style="margin-bottom:16px">
+        <div class="sla-item"><div class="sla-val">99.5%</div><div class="sla-label">Uptime guarantee</div></div>
+        <div class="sla-item"><div class="sla-val">3 rings</div><div class="sla-label">Call answer time</div></div>
+        <div class="sla-item"><div class="sla-val">60 sec</div><div class="sla-label">Lead notification</div></div>
+        <div class="sla-item"><div class="sla-val">4 hrs</div><div class="sla-label">Support response</div></div>
+      </div>
+      <div class="guarantee-box">
+        <div class="guarantee-icon">🛡️</div>
+        <div class="guarantee-text"><strong>30-Day Money-Back Guarantee.</strong> If you're not satisfied within 30 days of go-live, we'll refund your first month in full — no questions asked.</div>
+      </div>
+    </div>
+
+    <!-- 6. Cancellation -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">6</div><div class="cs-title">Cancellation & Refunds</div></div>
+      <ul class="term-list">
+        <li>Cancel anytime with 30 days written notice to okama@nevermisshawaii.com</li>
+        <li>No cancellation fees, no early termination penalties</li>
+        <li>Service continues through the end of your paid billing period</li>
+        <li>All call recordings and data available for export upon request</li>
+        <li>30-day money-back guarantee from go-live date — full refund, no questions asked</li>
+      </ul>
+    </div>
+
+    <!-- 7. Data & Privacy -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">7</div><div class="cs-title">Data & Privacy</div></div>
+      <ul class="term-list">
+        <li>You retain 100% ownership of all customer data collected through the AI receptionist</li>
+        <li>NeverMiss Hawaii will never sell, share, or use your customer data for any purpose other than delivering your service</li>
+        <li>All calls and data are encrypted end-to-end</li>
+        <li>Call recordings are stored for 90 days and then automatically deleted unless you download them</li>
+        <li>Compliant with GDPR and CCPA data protection standards</li>
+      </ul>
+    </div>
+
+    <!-- 8. Limitations -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">8</div><div class="cs-title">Limitation of Liability</div></div>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.8">NeverMiss Hawaii is not liable for lost business resulting from: (a) telecommunications outages or failures outside our infrastructure; (b) incorrect call forwarding setup by the client; (c) changes to your business that degrade AI accuracy after onboarding; (d) callers who disconnect before the AI can capture their information. AI performance is directly proportional to the quality of information provided during onboarding.</p>
+    </div>
+
+    <!-- 9. Signature -->
+    <div class="contract-section">
+      <div class="cs-header"><div class="cs-num">✍</div><div class="cs-title">Digital Signature</div></div>
+      <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px">By typing your full legal name below and clicking "Sign Agreement," you confirm that you have read, understood, and agree to all terms of this Service Agreement on behalf of your business.</p>
+
+      <div class="form-group">
+        <label class="form-label" style="font-size:13px">Type Your Full Legal Name to Sign <span class="req">*</span></label>
+        <input class="sig-input" id="signatureInput" placeholder="Type your full name here" autocomplete="off" required>
+        <div class="sig-date" id="sigDate"></div>
+      </div>
+
+      <div style="background:var(--accent-l);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#4338ca;line-height:1.6">
+        By signing, you agree to the NeverMiss Hawaii Service Agreement including the monthly fee of $300/month, the selected service mode, and all terms outlined in Sections 1–8 above. This constitutes a legally binding digital signature.
+      </div>
+
+      <button class="sign-btn" id="signBtn" disabled>
+        <span id="signBtnText">Sign Agreement</span>
+        <div class="spinner" id="signSpinner" style="display:none"></div>
+      </button>
+      <div class="legal-note">This digital signature is legally binding under Hawaii Revised Statutes §490E (Uniform Electronic Transactions Act).<br>NeverMiss Hawaii · okama@nevermisshawaii.com · (808) 724-3713</div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const params   = new URLSearchParams(window.location.search);
+const leadId   = params.get('id');
+const setupFee = params.get('setup') || '0';
+const hours    = params.get('hours') || '40';
+
+const SETUP_TIERS = { '0':'$0 (Waived — Beta)', '300':'$300', '600':'$600', '900':'$900', '1200':'$1,200', '1500':'$1,500' };
+const HOURS_LABELS = { '10':'10 hours (~200–300 calls/mo)', '20':'20 hours (~400–600 calls/mo)', '40':'40 hours (~800–1,200 calls/mo)', 'unlimited':'Unlimited' };
+
+function show(id) {
+  ['loadingScreen','errorScreen','alreadySignedScreen','successScreen','mainContent']
+    .forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+// Mode card toggle
+document.querySelectorAll('[name="svc_mode"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('modeCard1').classList.toggle('selected', document.getElementById('svc_auto').checked);
+    document.getElementById('modeCard2').classList.toggle('selected', document.getElementById('svc_transfer').checked);
+  });
+});
+
+// Enable sign button when signature typed
+const signatureInput = document.getElementById('signatureInput');
+const signBtn = document.getElementById('signBtn');
+signatureInput.addEventListener('input', () => {
+  signBtn.disabled = signatureInput.value.trim().length < 3;
+});
+
+// Sign date display
+const today = new Date();
+document.getElementById('sigDate').textContent = 'Date: ' + today.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+document.getElementById('heroDate').textContent = 'Agreement Date: ' + today.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+// Submit
+signBtn.addEventListener('click', async () => {
+  const mode = document.querySelector('[name="svc_mode"]:checked');
+  if (!mode) { alert('Please select a Service Mode (Section 3)'); return; }
+
+  const bizName     = document.getElementById('c_biz_name').value.trim();
+  const contactName = document.getElementById('c_contact_name').value.trim();
+  const email       = document.getElementById('c_email').value.trim();
+  const phone       = document.getElementById('c_phone').value.trim();
+  const address     = document.getElementById('c_address').value.trim();
+  const sig         = signatureInput.value.trim();
+
+  if (!bizName || !contactName || !email || !phone) {
+    alert('Please complete all required fields in Section 1 before signing.');
+    document.getElementById('c_biz_name').scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  if (sig.length < 3) { alert('Please type your full legal name to sign.'); return; }
+
+  document.getElementById('signBtnText').style.display = 'none';
+  document.getElementById('signSpinner').style.display = 'block';
+  signBtn.disabled = true;
+
+  const setupLabel = SETUP_TIERS[setupFee] || `$${setupFee}`;
+  const hoursLabel = HOURS_LABELS[hours] || `${hours} hours`;
+
+  try {
+    // Insert contract
+    const { error: contractErr } = await supabase.from('contract_signatures').insert({
+      lead_id:        leadId,
+      business_name:  bizName,
+      contact_name:   contactName,
+      contact_email:  email,
+      contact_phone:  phone,
+      business_address: address,
+      service_mode:   mode.value,
+      monthly_fee:    '$300.00/month',
+      setup_fee:      setupLabel,
+      included_hours: hoursLabel,
+      signature_text: sig,
+      signed_at:      new Date().toISOString(),
+    });
+    if (contractErr) throw contractErr;
+
+    // Update lead — mark signed + move to Closed
+    await supabase.from('leads').update({
+      contract_status:  'signed',
+      pipeline_stage:   'Closed',
+    }).eq('id', leadId);
+
+    // Note
+    await supabase.from('lead_notes').insert({
+      lead_id: leadId,
+      content: `Service agreement signed digitally by ${sig} on ${today.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}. Mode: ${mode.value === 'auto' ? 'Auto-Booking' : 'Lead Capture + Transfer'}. Setup: ${setupLabel}. Hours: ${hoursLabel}.`
+    });
+
+    // Notification
+    await supabase.from('notifications').insert({
+      lead_id: leadId,
+      type: 'contract_signed',
+      message: `${bizName} signed the service agreement — send Stripe payment link and schedule onboarding call`
+    });
+
+    show('successScreen');
+  } catch (err) {
+    console.error(err);
+    alert('Signing failed: ' + (err.message || 'Please try again or contact (808) 724-3713'));
+    document.getElementById('signBtnText').style.display = 'inline';
+    document.getElementById('signSpinner').style.display = 'none';
+    signBtn.disabled = false;
+  }
+});
+
+// Init
+async function init() {
+  if (!leadId) { document.getElementById('errorMsg').textContent = 'No lead ID in URL. Use the link provided by NeverMiss Hawaii.'; show('errorScreen'); return; }
+
+  // Check already signed
+  const { data: existing } = await supabase.from('contract_signatures').select('id, signed_at, signature_text').eq('lead_id', leadId).maybeSingle();
+  if (existing) {
+    const signedDate = new Date(existing.signed_at).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+    document.getElementById('alreadySignedMsg').innerHTML = `This agreement was signed by <strong>${existing.signature_text}</strong> on <strong>${signedDate}</strong>.<br><br>Questions? Call Anu at <strong>(808) 724-3713</strong>`;
+    show('alreadySignedScreen'); return;
+  }
+
+  // Get lead data
+  const { data: lead, error } = await supabase.from('leads').select('business_name, contact_name, email, phone, city, state').eq('id', leadId).maybeSingle();
+  if (error || !lead) { document.getElementById('errorMsg').textContent = 'Lead not found. Contact NeverMiss Hawaii for a valid link.'; show('errorScreen'); return; }
+
+  // Display
+  document.getElementById('heroBizName').textContent = lead.business_name || '';
+  document.title = `NeverMiss — ${lead.business_name} Service Agreement`;
+
+  document.getElementById('clientInfoDisplay').innerHTML = `
+    <strong>${lead.business_name || ''}</strong><br>
+    ${lead.contact_name || ''}<br>
+    ${lead.email || ''}<br>
+    ${lead.phone || ''}<br>
+    ${lead.city && lead.state ? `${lead.city}, ${lead.state}` : ''}
+  `;
+
+  // Pre-fill form fields
+  if (lead.business_name) document.getElementById('c_biz_name').value = lead.business_name;
+  if (lead.contact_name)  document.getElementById('c_contact_name').value = lead.contact_name;
+  if (lead.email)         document.getElementById('c_email').value = lead.email;
+  if (lead.phone)         document.getElementById('c_phone').value = lead.phone;
+  if (lead.city && lead.state) document.getElementById('c_address').value = `${lead.city}, ${lead.state}`;
+
+  // Show pricing from URL params
+  document.getElementById('setupFeeDisplay').textContent = SETUP_TIERS[setupFee] || `$${setupFee}`;
+  document.getElementById('hoursDisplay').textContent = HOURS_LABELS[hours] || `${hours} hours/month`;
+
+  // Mark as sent
+  await supabase.from('leads').update({ contract_status: 'sent' }).eq('id', leadId).eq('contract_status', 'not sent');
+
+  show('mainContent');
+}
+
+init();
+</script>
+</body>
+</html>

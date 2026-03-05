@@ -1,0 +1,22 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/onboarding.html"
+  to = "/onboarding.html"
+  status = 200
+
+[[redirects]]
+  from = "/contract.html"
+  to = "/contract.html"
+  status = 200
+
+[[redirects]]
+  from = "/data-cleaner.html"
+  to = "/data-cleaner.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeverMiss CRM</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     APP SHELL
+     ════════════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ── Sidebar ──────────────────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">NM</div>
+      <div>
+        <div class="logo-text">NeverMiss</div>
+        <div class="logo-sub">Hawaii CRM</div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="nav-section">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item" data-pane="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-pane="pipeline">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12H2M22 12l-4-4m4 4l-4 4M2 12l4-4M2 12l4 4"/></svg>
+        Pipeline
+      </button>
+      <button class="nav-item" data-pane="leads">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Leads
+      </button>
+    </div>
+
+    <!-- Outreach -->
+    <div class="nav-section">
+      <div class="nav-section-label">Outreach</div>
+      <button class="nav-item" data-pane="sequences">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Sequences
+      </button>
+      <button class="nav-item" data-pane="messaging">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messaging
+      </button>
+      <button class="nav-item" data-pane="sms">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        SMS
+      </button>
+      <button class="nav-item" data-pane="calendar">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </button>
+      <button class="nav-item" data-pane="analytics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        Analytics
+      </button>
+    </div>
+
+    <!-- Resources -->
+    <div class="nav-section">
+      <div class="nav-section-label">Resources</div>
+      <button class="nav-item" data-pane="scripts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Scripts
+      </button>
+      <button class="nav-item" data-pane="documents">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        Documents
+      </button>
+      <button class="nav-item" data-pane="tasks">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Daily Tasks
+      </button>
+      <button class="nav-item" data-pane="notifications">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notifications
+        <span class="nav-badge" style="display:none">0</span>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="userInitials">?</div>
+        <div>
+          <div class="user-name" id="userName"></div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+      </div>
+      <button class="btn-signout" id="btnSignOut">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- ── Main ─────────────────────────────────────────────── -->
+  <div id="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" id="btnAddLeadTop">+ Add Lead</button>
+      </div>
+    </div>
+
+    <!-- Content panes -->
+    <div id="content">
+      <div class="pane active" id="pane-dashboard"></div>
+      <div class="pane" id="pane-pipeline"></div>
+      <div class="pane" id="pane-leads"></div>
+      <div class="pane" id="pane-sequences"></div>
+      <div class="pane" id="pane-messaging"></div>
+      <div class="pane" id="pane-sms"></div>
+      <div class="pane" id="pane-calendar"></div>
+      <div class="pane" id="pane-scripts"></div>
+      <div class="pane" id="pane-documents"></div>
+      <div class="pane" id="pane-tasks"></div>
+      <div class="pane" id="pane-notifications"></div>
+      <div class="pane" id="pane-analytics"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     LEAD DETAIL PANEL
+     ════════════════════════════════════════════════════════════ -->
+<div id="leadOverlay"></div>
+<div id="leadPanel">
+  <div class="panel-header">
+    <div class="panel-title" id="leadPanelTitle">Lead</div>
+    <button class="panel-close" id="leadPanelClose" title="Close">×</button>
+  </div>
+  <div class="panel-body" id="leadPanelBody">
+    <!-- Populated by app.js -->
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-danger btn-sm" id="btnDeleteLead">Delete Lead</button>
+    <button class="btn btn-secondary btn-sm ml-auto" id="leadPanelClose2">Close</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     ADD LEAD MODAL
+     ════════════════════════════════════════════════════════════ -->
+<div id="addLeadModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Add Lead</div>
+      <button class="modal-close" id="addLeadClose">×</button>
+    </div>
+
+    <form id="addLeadForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Business Name *</label>
+          <input class="form-input" name="business_name" required placeholder="Aloha Auto Spa">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Industry</label>
+          <input class="form-input" name="industry" placeholder="Auto Detailing">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Contact Name</label>
+          <input class="form-input" name="contact_name" placeholder="John Kahananui">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" name="phone" type="tel" placeholder="(808) 555-1234">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" name="email" type="email" placeholder="john@alohaautospa.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input class="form-input" name="website" placeholder="alohaautospa.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input class="form-input" name="city" placeholder="Honolulu">
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input class="form-input" name="state" value="HI">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Pipeline Stage</label>
+          <select class="form-select" name="pipeline_stage">
+            <option>New Leads</option>
+            <option>Contacted</option>
+            <option>Called</option>
+            <option>Demo Scheduled</option>
+            <option>Demo Done</option>
+            <option>Closed Won</option>
+            <option>Closed Lost</option>
+            <option>DQ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" name="priority">
+            <option value="C">C — Standard</option>
+            <option value="B">B — Warm</option>
+            <option value="A">A — Hot</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Source</label>
+        <select class="form-select" name="source">
+          <option>Manual</option>
+          <option>Google Places</option>
+          <option>Yelp</option>
+          <option>Referral</option>
+          <option>Cold Outreach</option>
+          <option>Inbound</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelAddLead">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitAddLead">Add Lead</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Document Viewer Modal -->
+<div id="docViewerModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div id="docViewerBox" style="background:#fff;border-radius:14px;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #e2e8f0;flex-shrink:0">
+      <div>
+        <div id="docViewerTitle" style="font-size:16px;font-weight:700;color:#0f172a"></div>
+        <div id="docViewerSub" style="font-size:12px;color:#64748b;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="docViewerPrint" onclick="window.print()" style="padding:7px 14px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Download PDF</button>
+        <button onclick="document.getElementById('docViewerModal').style.display='none'" style="padding:7px 10px;background:#f1f5f9;border:none;border-radius:8px;font-size:18px;color:#64748b;cursor:pointer;line-height:1">&times;</button>
+      </div>
+    </div>
+    <div id="docViewerBody" style="overflow-y:auto;padding:24px;flex:1"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script type="module" src="js/app.js"></script>
+
+<!-- Second close button for lead panel -->
+<script>
+  document.getElementById('leadPanelClose2')?.addEventListener('click', () => {
+    document.getElementById('leadPanel').classList.remove('open');
+    document.getElementById('leadOverlay').classList.remove('visible');
+  });
+</script>
+
+</body>
+</html>
