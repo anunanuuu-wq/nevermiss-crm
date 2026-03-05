@@ -208,11 +208,11 @@ async function loadThread(leadId, lead) {
     <div class="sms-compose">
       <div style="display:flex;gap:8px;align-items:flex-end">
         <textarea class="sms-compose-input" id="smsReplyInput" rows="2"
-          placeholder="Send a message via iMessage\u2026"></textarea>
+          placeholder="Send a message via Twilio\u2026"></textarea>
         <button class="btn btn-primary btn-sm" id="smsSendBtn">Send</button>
       </div>
       <div style="font-size:11px;color:var(--text-muted);margin-top:5px">
-        Delivered via iMessage sync within ~60 sec &middot;
+        Delivered via Twilio within ~60 sec &middot;
         <a href="#" id="smsLogLink" style="color:var(--text-muted);text-decoration:underline">Log inbound manually</a>
       </div>
       <div id="smsLogForm" style="display:none;margin-top:8px">
