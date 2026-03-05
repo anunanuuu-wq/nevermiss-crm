@@ -1,10 +1,11 @@
 // ============================================================
-// NeverMiss CRM — Messaging Tab (Unified Email Inbox)
+// NeverMiss CRM — Messaging Tab (Email + SMS)
 // ============================================================
 import { supabase } from './client.js';
 import { sendEmail } from './email.js';
 import { renderEmailThread } from './emailThread.js';
 import { showToast, openLead } from './app.js';
+import { renderSms } from './sms.js';
 
 const FROM_EMAIL = 'okama@nevermisshawaii.com';
 
@@ -43,7 +44,38 @@ let _selectedLeadId = null;
 // ── Main render ──────────────────────────────────────────────
 export async function renderMessaging() {
   const pane = document.getElementById('pane-messaging');
-  pane.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
+
+  // Render tab shell
+  pane.innerHTML = `
+    <div style="display:flex;flex-direction:column;height:100%">
+      <div class="msg-pane-tabs">
+        <button class="msg-pane-tab active" data-tab="email">✉ Email</button>
+        <button class="msg-pane-tab" data-tab="sms">💬 SMS</button>
+      </div>
+      <div id="msgTabContent" style="flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0"></div>
+    </div>
+  `;
+
+  const tabContent = document.getElementById('msgTabContent');
+
+  pane.querySelectorAll('.msg-pane-tab').forEach(tab => {
+    tab.addEventListener('click', async () => {
+      pane.querySelectorAll('.msg-pane-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if (tab.dataset.tab === 'email') {
+        await renderEmailTab(tabContent);
+      } else {
+        await renderSms(tabContent);
+      }
+    });
+  });
+
+  // Default: email tab
+  await renderEmailTab(tabContent);
+}
+
+async function renderEmailTab(tabContent) {
+  tabContent.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
 
   // Fetch all emails with lead info
   const { data: emails, error } = await supabase
@@ -53,7 +85,7 @@ export async function renderMessaging() {
     .limit(1000);
 
   if (error) {
-    pane.innerHTML = `<div class="empty-state"><div class="empty-state-title">Failed to load messages</div><div class="empty-state-sub">${esc(error.message)}</div></div>`;
+    tabContent.innerHTML = `<div class="empty-state"><div class="empty-state-title">Failed to load messages</div><div class="empty-state-sub">${esc(error.message)}</div></div>`;
     return;
   }
 
@@ -78,7 +110,7 @@ export async function renderMessaging() {
     .sort((a, b) => new Date(b.latestEmail.sent_at) - new Date(a.latestEmail.sent_at));
 
   // Render shell
-  pane.innerHTML = `
+  tabContent.innerHTML = `
     <div class="messaging-layout">
       <!-- Left: conversation list -->
       <div class="messaging-sidebar">
@@ -106,7 +138,7 @@ export async function renderMessaging() {
   `;
 
   // Wire up conversation clicks
-  pane.querySelectorAll('.msg-conv-item').forEach(el => {
+  tabContent.querySelectorAll('.msg-conv-item').forEach(el => {
     el.addEventListener('click', () => selectConversation(el.dataset.leadId));
   });
 

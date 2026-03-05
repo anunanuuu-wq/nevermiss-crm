@@ -15,7 +15,6 @@ import { renderDocuments } from './documents.js';
 import { showEmailModal } from './email.js';
 import { renderEmailThread } from './emailThread.js';
 import { renderMessaging } from './messaging.js';
-import { renderSms } from './sms.js';
 import { renderCampaignStats } from './campaignStats.js';
 
 // ── Toast ────────────────────────────────────────────────────
@@ -42,7 +41,6 @@ const PANES = {
   tasks:         { label: 'Daily Tasks',   render: renderTasks },
   notifications: { label: 'Notifications', render: renderNotifications },
   messaging:     { label: 'Messaging',     render: renderMessaging },
-  sms:           { label: 'SMS',           render: renderSms },
   analytics:     { label: 'Analytics',     render: renderCampaignStats },
 };
 
@@ -222,10 +220,17 @@ export async function openLead(id) {
       </div>
     </div>
 
-    <!-- Emails -->
+    <!-- Messages -->
     <div class="panel-section">
-      <div class="panel-section-title">Emails</div>
-      <div id="emailThreadContainer"><div class="spinner"></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="panel-section-title" style="margin-bottom:0">Messages</div>
+        <div class="panel-msg-toggle">
+          <button class="panel-msg-tab active" data-type="email">Email</button>
+          <button class="panel-msg-tab" data-type="sms">SMS</button>
+        </div>
+      </div>
+      <div id="emailThreadContainer"></div>
+      <div id="smsThreadContainer" style="display:none"></div>
     </div>
 
     <!-- Documents -->
@@ -400,8 +405,72 @@ export async function openLead(id) {
     });
   });
 
-  // Load email thread
+  // Load email thread (default)
   renderEmailThread(lead);
+
+  // Email / SMS toggle in lead panel
+  body.querySelectorAll('.panel-msg-tab').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      body.querySelectorAll('.panel-msg-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const type = btn.dataset.type;
+      const emailEl = document.getElementById('emailThreadContainer');
+      const smsEl   = document.getElementById('smsThreadContainer');
+      if (emailEl) emailEl.style.display = type === 'email' ? '' : 'none';
+      if (smsEl)   smsEl.style.display   = type === 'sms'   ? '' : 'none';
+      if (type === 'sms') await loadLeadSmsThread(id, lead, smsEl);
+    });
+  });
+
+  async function loadLeadSmsThread(leadId, leadData, container) {
+    container.innerHTML = '<div style="text-align:center;padding:20px"><div class="spinner"></div></div>';
+    const { data: msgs, error } = await supabase
+      .from('lead_sms').select('*').eq('lead_id', leadId).order('sent_at', { ascending: true });
+    if (error) { container.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px">Failed to load SMS</div>'; return; }
+
+    const bubbles = (msgs || []).map(m => {
+      const out = m.direction === 'outbound';
+      const statusMap = { sent: ['#6b7280','Sent'], delivered: ['#3b82f6','Delivered'], failed: ['#ef4444','Failed'] };
+      const [sc, sl] = statusMap[m.status] || statusMap.sent;
+      const badge = out ? `<span class="sms-status-badge" style="background:${sc}">${sl}</span>` : '';
+      const ts = m.sent_at ? new Date(m.sent_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',hour12:true}) : '';
+      return `<div class="sms-bubble-row ${out?'sms-bubble-row--out':'sms-bubble-row--in'}">
+        <div class="sms-bubble ${out?'sms-bubble--out':'sms-bubble--in'}">${esc(m.body)}${badge}</div>
+        <div class="sms-bubble-time">${ts}</div></div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="sms-bubble-list" style="max-height:320px" id="leadSmsBubbles">${
+        bubbles || '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px">No SMS messages yet</div>'
+      }</div>
+      <div class="sms-compose" style="margin-top:0">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Log an inbound reply from ${esc(leadData.business_name || 'this lead')}</div>
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <textarea class="sms-compose-input" id="leadSmsReplyInput" rows="2" placeholder="Type their reply\u2026"></textarea>
+          <button class="btn btn-primary btn-sm" id="leadSmsLogBtn">Log Reply</button>
+        </div>
+      </div>`;
+
+    const bl = document.getElementById('leadSmsBubbles');
+    if (bl) bl.scrollTop = bl.scrollHeight;
+
+    document.getElementById('leadSmsLogBtn')?.addEventListener('click', async () => {
+      const input = document.getElementById('leadSmsReplyInput');
+      const body2 = input?.value.trim();
+      if (!body2) return;
+      const logBtn = document.getElementById('leadSmsLogBtn');
+      logBtn.disabled = true; logBtn.textContent = 'Saving\u2026';
+      const { error: ie } = await supabase.from('lead_sms').insert({ lead_id: leadId, direction: 'inbound', body: body2, status: 'received' });
+      if (ie) { showToast('Failed to log reply', true); }
+      else {
+        showToast('Reply logged');
+        input.value = '';
+        await supabase.from('leads').update({ pipeline_stage: 'Contacted' }).eq('id', leadId).eq('pipeline_stage', 'New Leads');
+        await loadLeadSmsThread(leadId, leadData, container);
+      }
+      logBtn.disabled = false; logBtn.textContent = 'Log Reply';
+    });
+  }
 
   // Add note
   document.getElementById('addNoteBtn')?.addEventListener('click', addNote);

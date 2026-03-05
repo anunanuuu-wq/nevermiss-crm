@@ -45,8 +45,8 @@ let _conversations = [];
 let _selectedLeadId = null;
 
 // ── Main render ──────────────────────────────────────────────
-export async function renderSms() {
-  const pane = document.getElementById('pane-sms');
+export async function renderSms(containerEl) {
+  const pane = containerEl || document.getElementById('pane-sms');
   pane.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
 
   const { data: messages, error } = await supabase

@@ -1301,11 +1301,60 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   overflow: hidden;
 }
 
-/* ── SMS Pane ────────────────────────────────────────── */
-#pane-sms {
-  height: 100%;
-  padding: 0;
-  overflow: hidden;
+/* ── Messaging pane sub-tabs (Email | SMS) ───────────── */
+.msg-pane-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 10px 16px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.msg-pane-tab {
+  padding: 7px 16px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+}
+.msg-pane-tab.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+.msg-pane-tab:hover:not(.active) { color: var(--text-primary); }
+
+/* ── Lead panel message toggle (Email | SMS) ─────────── */
+.panel-msg-toggle {
+  display: flex;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+}
+
+.panel-msg-tab {
+  padding: 4px 12px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.panel-msg-tab.active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .sms-empty-icon { font-size: 42px; margin-bottom: 12px; }
