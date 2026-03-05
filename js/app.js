@@ -442,20 +442,50 @@ export async function openLead(id) {
     }).join('');
 
     container.innerHTML = `
-      <div class="sms-bubble-list" style="max-height:320px" id="leadSmsBubbles">${
+      <div class="sms-bubble-list" style="max-height:280px" id="leadSmsBubbles">${
         bubbles || '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px">No SMS messages yet</div>'
       }</div>
       <div class="sms-compose" style="margin-top:0">
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Log an inbound reply from ${esc(leadData.business_name || 'this lead')}</div>
         <div style="display:flex;gap:8px;align-items:flex-end">
-          <textarea class="sms-compose-input" id="leadSmsReplyInput" rows="2" placeholder="Type their reply\u2026"></textarea>
-          <button class="btn btn-primary btn-sm" id="leadSmsLogBtn">Log Reply</button>
+          <textarea class="sms-compose-input" id="leadSmsSendInput" rows="2" placeholder="Send a message via iMessage\u2026"></textarea>
+          <button class="btn btn-primary btn-sm" id="leadSmsSendBtn">Send</button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:5px">
+          Delivered via iMessage sync within ~60 sec \u00b7
+          <a href="#" id="leadSmsLogLink" style="color:var(--text-muted);text-decoration:underline">Log inbound manually</a>
+        </div>
+        <div id="leadSmsLogForm" style="display:none;margin-top:8px">
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <textarea class="sms-compose-input" id="leadSmsReplyInput" rows="2" placeholder="Their reply\u2026" style="border-color:#d1d5db"></textarea>
+            <button class="btn btn-secondary btn-sm" id="leadSmsLogBtn">Log</button>
+          </div>
         </div>
       </div>`;
 
     const bl = document.getElementById('leadSmsBubbles');
     if (bl) bl.scrollTop = bl.scrollHeight;
 
+    // Send outbound
+    document.getElementById('leadSmsSendBtn')?.addEventListener('click', async () => {
+      const input = document.getElementById('leadSmsSendInput');
+      const body2 = input?.value.trim();
+      if (!body2) return;
+      const sendBtn = document.getElementById('leadSmsSendBtn');
+      sendBtn.disabled = true; sendBtn.textContent = 'Queuing\u2026';
+      const { error: ie } = await supabase.from('lead_sms').insert({ lead_id: leadId, direction: 'outbound', body: body2, status: 'pending' });
+      if (ie) { showToast('Failed to queue message', true); }
+      else { showToast('Queued — sends within 60 sec'); input.value = ''; await loadLeadSmsThread(leadId, leadData, container); }
+      sendBtn.disabled = false; sendBtn.textContent = 'Send';
+    });
+
+    // Toggle manual log form
+    document.getElementById('leadSmsLogLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const form = document.getElementById('leadSmsLogForm');
+      if (form) form.style.display = form.style.display === 'none' ? '' : 'none';
+    });
+
+    // Log inbound manually
     document.getElementById('leadSmsLogBtn')?.addEventListener('click', async () => {
       const input = document.getElementById('leadSmsReplyInput');
       const body2 = input?.value.trim();
@@ -470,7 +500,7 @@ export async function openLead(id) {
         await supabase.from('leads').update({ pipeline_stage: 'Contacted' }).eq('id', leadId).eq('pipeline_stage', 'New Leads');
         await loadLeadSmsThread(leadId, leadData, container);
       }
-      logBtn.disabled = false; logBtn.textContent = 'Log Reply';
+      logBtn.disabled = false; logBtn.textContent = 'Log';
     });
   }
 

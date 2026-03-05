@@ -206,13 +206,20 @@ async function loadThread(leadId, lead) {
       }
     </div>
     <div class="sms-compose">
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">
-        Replies are sent manually via iMessage. Log incoming replies here.
-      </div>
       <div style="display:flex;gap:8px;align-items:flex-end">
         <textarea class="sms-compose-input" id="smsReplyInput" rows="2"
-          placeholder="Log an inbound reply from ${esc(lead.business_name || 'this lead')}\u2026"></textarea>
-        <button class="btn btn-primary btn-sm" id="smsLogReplyBtn">Log Reply</button>
+          placeholder="Send a message via iMessage\u2026"></textarea>
+        <button class="btn btn-primary btn-sm" id="smsSendBtn">Send</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:5px">
+        Delivered via iMessage sync within ~60 sec &middot;
+        <a href="#" id="smsLogLink" style="color:var(--text-muted);text-decoration:underline">Log inbound manually</a>
+      </div>
+      <div id="smsLogForm" style="display:none;margin-top:8px">
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <textarea class="sms-compose-input" id="smsLogInput" rows="2" placeholder="Their reply\u2026" style="border-color:#d1d5db"></textarea>
+          <button class="btn btn-secondary btn-sm" id="smsLogBtn">Log</button>
+        </div>
       </div>
     </div>
   `;
@@ -221,40 +228,47 @@ async function loadThread(leadId, lead) {
   const bubbles = document.getElementById('smsBubbles');
   if (bubbles) bubbles.scrollTop = bubbles.scrollHeight;
 
-  document.getElementById('smsLogReplyBtn')?.addEventListener('click', async () => {
+  // Send outbound
+  document.getElementById('smsSendBtn')?.addEventListener('click', async () => {
     const input = document.getElementById('smsReplyInput');
     const body = input?.value.trim();
     if (!body) return;
-
-    const btn = document.getElementById('smsLogReplyBtn');
-    btn.disabled = true;
-    btn.textContent = 'Saving\u2026';
-
-    const { error: insertErr } = await supabase.from('lead_sms').insert({
-      lead_id:   leadId,
-      direction: 'inbound',
-      body,
-      status:    'received',
+    const btn = document.getElementById('smsSendBtn');
+    btn.disabled = true; btn.textContent = 'Queuing\u2026';
+    const { error: ie } = await supabase.from('lead_sms').insert({
+      lead_id: leadId, direction: 'outbound', body, status: 'pending',
     });
+    if (ie) { showToast('Failed to queue message', true); }
+    else { showToast('Queued — sends within 60 sec'); input.value = ''; await loadThread(leadId, lead); }
+    btn.disabled = false; btn.textContent = 'Send';
+  });
 
-    if (insertErr) {
-      showToast('Failed to log reply', true);
-    } else {
-      showToast('Reply logged');
-      input.value = '';
-      // Update pipeline stage to Contacted
-      await supabase.from('leads')
-        .update({ pipeline_stage: 'Contacted' })
-        .eq('id', leadId)
-        .eq('pipeline_stage', 'New Leads');
+  // Toggle manual log form
+  document.getElementById('smsLogLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const form = document.getElementById('smsLogForm');
+    if (form) form.style.display = form.style.display === 'none' ? '' : 'none';
+  });
+
+  // Log inbound manually
+  document.getElementById('smsLogBtn')?.addEventListener('click', async () => {
+    const input = document.getElementById('smsLogInput');
+    const body = input?.value.trim();
+    if (!body) return;
+    const btn = document.getElementById('smsLogBtn');
+    btn.disabled = true; btn.textContent = 'Saving\u2026';
+    const { error: ie } = await supabase.from('lead_sms').insert({
+      lead_id: leadId, direction: 'inbound', body, status: 'received',
+    });
+    if (ie) { showToast('Failed to log reply', true); }
+    else {
+      showToast('Reply logged'); input.value = '';
+      await supabase.from('leads').update({ pipeline_stage: 'Contacted' })
+        .eq('id', leadId).eq('pipeline_stage', 'New Leads');
       await loadThread(leadId, lead);
-      // Refresh conversation list counts
-      await renderSms();
-      selectConversation(leadId);
+      await renderSms(); selectConversation(leadId);
     }
-
-    btn.disabled = false;
-    btn.textContent = 'Log Reply';
+    btn.disabled = false; btn.textContent = 'Log';
   });
 }
 
