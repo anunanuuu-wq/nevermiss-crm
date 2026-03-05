@@ -9,14 +9,26 @@ const FROM_EMAIL = 'okama@nevermisshawaii.com';
 
 export async function sendEmail(to, subject, html) {
   try {
-    const res = await fetch('/.netlify/functions/send-email', {
+    const apiKey = window.RESEND_API_KEY;
+    if (!apiKey) return { ok: false, error: 'RESEND_API_KEY not set in config.js' };
+
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to, subject, html }),
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: `NeverMiss Hawaii <${FROM_EMAIL}>`,
+        to,
+        subject,
+        html,
+      }),
     });
+
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      return { ok: false, error: err.error || `HTTP ${res.status}` };
+      return { ok: false, error: err.message || `HTTP ${res.status}` };
     }
     const body = await res.json().catch(() => ({}));
     return { ok: true, resend_email_id: body.id || null };
