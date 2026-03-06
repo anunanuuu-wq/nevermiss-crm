@@ -282,7 +282,7 @@
         <div><span class="price-amount">$300</span><span class="price-period">/month</span></div>
         <div class="price-details">
           <div class="price-detail-item"><div class="pdl">Setup Fee</div><div class="pdv" id="setupFeeDisplay">$0 (Waived)</div></div>
-          <div class="price-detail-item"><div class="pdl">Included Monthly Hours</div><div class="pdv" id="hoursDisplay">40 hours</div></div>
+          <div class="price-detail-item"><div class="pdl">Calls Included</div><div class="pdv">Unlimited</div></div>
           <div class="price-detail-item"><div class="pdl">Contract Term</div><div class="pdv">Month-to-month</div></div>
           <div class="price-detail-item"><div class="pdl">Billing Starts</div><div class="pdv">On go-live date</div></div>
         </div>
@@ -292,7 +292,7 @@
         <li>Billing cycle begins on your go-live date — not before</li>
         <li>Monthly auto-renewal — billed on the same date each month</li>
         <li>7-day grace period for late payments before service pause</li>
-        <li>No per-call charges, no overages within your included hours</li>
+        <li>No per-call charges, no overages — unlimited calls included</li>
       </ul>
     </div>
 
@@ -376,8 +376,8 @@ const leadId   = params.get('id');
 const setupFee = params.get('setup') || '0';
 const hours    = params.get('hours') || '40';
 
-const SETUP_TIERS = { '0':'$0 (Waived — Beta)', '300':'$300', '600':'$600', '900':'$900', '1200':'$1,200', '1500':'$1,500' };
-const HOURS_LABELS = { '10':'10 hours (~200–300 calls/mo)', '20':'20 hours (~400–600 calls/mo)', '40':'40 hours (~800–1,200 calls/mo)', 'unlimited':'Unlimited' };
+const SETUP_TIERS = { '0':'$0 (Waived — Beta)', '500':'$500', '1500':'$1,500' };
+const HOURS_LABELS = { '40':'Unlimited', 'unlimited':'Unlimited' };
 
 function show(id) {
   ['loadingScreen','errorScreen','alreadySignedScreen','successScreen','mainContent']
@@ -515,7 +515,6 @@ async function init() {
 
   // Show pricing from URL params
   document.getElementById('setupFeeDisplay').textContent = SETUP_TIERS[setupFee] || `$${setupFee}`;
-  document.getElementById('hoursDisplay').textContent = HOURS_LABELS[hours] || `${hours} hours/month`;
 
   // Mark as sent
   await supabase.from('leads').update({ contract_status: 'sent' }).eq('id', leadId).eq('contract_status', 'not sent');

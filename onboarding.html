@@ -467,8 +467,13 @@
           </div>
         </div>
         <div class="form-group">
+          <label class="form-label">What should the AI NOT do or book without your approval?</label>
+          <textarea class="form-textarea" id="f_ai_restrictions" placeholder="e.g. Don't book same-day appointments, don't quote prices over $X, route emergency calls directly to owner, don't book for service Y without a consultation first…"></textarea>
+          <div class="form-hint">Optional but important — helps us prevent the AI from overcommitting on your behalf</div>
+        </div>
+        <div class="form-group">
           <label class="form-label">Anything else we should know?</label>
-          <textarea class="form-textarea" id="f_additional_notes" placeholder="Special instructions, seasonal hours, services to avoid booking without approval, VIP clients, etc."></textarea>
+          <textarea class="form-textarea" id="f_additional_notes" placeholder="Special instructions, seasonal hours, VIP clients, etc."></textarea>
         </div>
       </div>
 
@@ -634,6 +639,7 @@ document.getElementById('onboardingForm').addEventListener('submit', async (e) =
     greeting_script:  document.getElementById('f_greeting_script').value.trim(),
     target_golive_date: document.getElementById('f_golive_date').value || null,
     best_test_time:   document.getElementById('f_test_time').value.trim(),
+    ai_restrictions:  document.getElementById('f_ai_restrictions').value.trim(),
     additional_notes: document.getElementById('f_additional_notes').value.trim(),
     signer_name:      document.getElementById('f_signer_name').value.trim(),
     signer_date:      new Date().toISOString().split('T')[0],

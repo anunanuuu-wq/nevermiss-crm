@@ -6,9 +6,9 @@ import { supabase } from './client.js';
 import { showEmailModal } from './email.js';
 
 const SETUP_TIERS = [
-  { label: 'Starter ($0 setup)',    value: '0|40',        setup: '0',    hours: '40'        },
-  { label: 'Standard ($500 setup)', value: '500|80',      setup: '500',  hours: '80'        },
-  { label: 'Premium ($1,500 setup)',value: '1500|Unlimited', setup: '1500', hours: 'Unlimited' },
+  { label: 'Beta — $0 setup (waived)', value: '0|unlimited',    setup: '0',    hours: 'unlimited' },
+  { label: 'Standard — $500 setup',    value: '500|unlimited',  setup: '500',  hours: 'unlimited' },
+  { label: 'Premium — $1,500 setup',   value: '1500|unlimited', setup: '1500', hours: 'unlimited' },
 ];
 
 function buildOnboardingLink(id) {
@@ -352,6 +352,7 @@ async function openOnboardingView(leadId) {
       fields: [
         ['Target Go-Live Date', data.target_golive_date || '—'],
         ['Best Test Time', data.best_test_time || '—'],
+        ['AI Restrictions', data.ai_restrictions || '—'],
         ['Additional Notes', data.additional_notes || '—'],
       ]
     },
