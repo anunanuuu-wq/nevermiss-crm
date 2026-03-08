@@ -33,6 +33,7 @@ export async function renderLeads() {
           <option>New Leads</option>
           <option>Contacted</option>
           <option>Called</option>
+          <option>Call Only</option>
           <option>Demo Scheduled</option>
           <option>Demo Done</option>
           <option>Closed Won</option>
@@ -182,7 +183,7 @@ function renderRows() {
         <td class="td-muted">${esc(l.city || '—')}</td>
         <td>
           <select class="stage-select" data-id="${l.id}">
-            ${['New Leads','Contacted','Called','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'].map(s =>
+            ${['New Leads','Contacted','Called','Call Only','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'].map(s =>
               `<option ${l.pipeline_stage===s?'selected':''}>${s}</option>`
             ).join('')}
           </select>
@@ -294,7 +295,7 @@ async function handleCsvImport(e) {
       const field = colMap[h];
       if (field && vals[idx]) row[field] = vals[idx].trim();
     });
-  const VALID_STAGES = ['New Leads','Contacted','Called','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'];
+  const VALID_STAGES = ['New Leads','Contacted','Called','Call Only','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'];
   const STAGE_MAP = {
     'new': 'New Leads', 'new leads': 'New Leads',
     'contacted': 'Contacted', 'cold': 'New Leads',
@@ -303,7 +304,7 @@ async function handleCsvImport(e) {
     'appointment set': 'Demo Scheduled', 'demo done': 'Demo Done',
     'closed': 'Closed Won', 'closed won': 'Closed Won',
     'closed lost': 'Closed Lost', 'not interested': 'Closed Lost',
-    'dq': 'DQ',
+    'dq': 'DQ', 'call only': 'Call Only', 'call-only': 'Call Only',
   };
   const VALID_PRIORITIES = ['A','B','C'];
 

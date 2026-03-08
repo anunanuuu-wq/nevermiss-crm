@@ -89,7 +89,7 @@ export async function openLead(id) {
 
   document.getElementById('leadPanelTitle').textContent = lead.business_name;
 
-  const stageOpts = ['New Leads','Contacted','Called','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'];
+  const stageOpts = ['New Leads','Contacted','Called','Call Only','Demo Scheduled','Demo Done','Closed Won','Closed Lost','DQ'];
   const actionTypes = ['Call','Email','Follow up','Demo','Proposal','Check in'];
 
   body.innerHTML = `
