@@ -29,7 +29,7 @@ export async function renderDashboard() {
   const mrr     = closedLeads ? closedLeads.reduce((s, l) => s + (l.mrr_value || 300), 0) : 0;
   const actions = todayLeads || [];
 
-  const stageCounts = { 'New Leads': 0, Contacted: 0, Called: 0, 'Demo Scheduled': 0, 'Demo Done': 0, 'Closed Won': 0, 'Closed Lost': 0, DQ: 0 };
+  const stageCounts = { 'New Leads': 0, Contacted: 0, Called: 0, 'Call Only': 0, 'Demo Scheduled': 0, 'Demo Done': 0, 'Closed Won': 0, 'Closed Lost': 0, DQ: 0 };
   leads.forEach(l => { if (stageCounts[l.pipeline_stage] !== undefined) stageCounts[l.pipeline_stage]++; });
 
   const goalCustomers = 17;

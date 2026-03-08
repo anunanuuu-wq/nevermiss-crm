@@ -5,8 +5,8 @@ import { supabase } from './client.js';
 import { openLead } from './app.js';
 import { showToast } from './app.js';
 
-const STAGES = ['New Leads', 'Contacted', 'Called', 'Demo Scheduled', 'Demo Done', 'Closed Won', 'Closed Lost', 'DQ'];
-const STAGE_SHORT = { 'New Leads': 'New', 'Contacted': 'Emailed', 'Called': 'Called', 'Demo Scheduled': 'Demo Sched', 'Demo Done': 'Demo Done', 'Closed Won': 'Won', 'Closed Lost': 'Lost', 'DQ': 'DQ' };
+const STAGES = ['New Leads', 'Contacted', 'Called', 'Call Only', 'Demo Scheduled', 'Demo Done', 'Closed Won', 'Closed Lost', 'DQ'];
+const STAGE_SHORT = { 'New Leads': 'New', 'Contacted': 'Emailed', 'Called': 'Called', 'Call Only': 'Call Only', 'Demo Scheduled': 'Demo Sched', 'Demo Done': 'Demo Done', 'Closed Won': 'Won', 'Closed Lost': 'Lost', 'DQ': 'DQ' };
 
 export async function renderPipeline() {
   const pane = document.getElementById('pane-pipeline');

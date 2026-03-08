@@ -379,6 +379,7 @@ ul { list-style: none; }
 .badge-NewLeads      { background: #f3f4f6; color: #6b7280; }
 .badge-Contacted     { background: #fffbeb; color: #b45309; }
 .badge-Called        { background: #fef3c7; color: #d97706; }
+.badge-CallOnly      { background: #e0f2fe; color: #0369a1; }
 .badge-DemoScheduled { background: #eff6ff; color: #1d4ed8; }
 .badge-DemoDone      { background: #f5f3ff; color: #6d28d9; }
 .badge-ClosedWon     { background: #f0fdf4; color: #15803d; }
@@ -529,12 +530,15 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   flex-shrink: 0;
 }
 
-.col-Cold .kanban-col-title::before         { background: var(--cold); }
-.col-Interested .kanban-col-title::before   { background: var(--interested); }
-.col-Demo .kanban-col-title::before         { background: var(--demo); }
-.col-Appointment .kanban-col-title::before  { background: var(--appt); }
-.col-Closed .kanban-col-title::before       { background: var(--closed); }
-.col-DQ .kanban-col-title::before           { background: var(--dq); }
+.col-NewLeads .kanban-col-title::before      { background: #6b7280; }
+.col-Contacted .kanban-col-title::before     { background: #b45309; }
+.col-Called .kanban-col-title::before        { background: #d97706; }
+.col-CallOnly .kanban-col-title::before      { background: #0369a1; }
+.col-DemoScheduled .kanban-col-title::before { background: #1d4ed8; }
+.col-DemoDone .kanban-col-title::before      { background: #6d28d9; }
+.col-ClosedWon .kanban-col-title::before     { background: #15803d; }
+.col-ClosedLost .kanban-col-title::before    { background: #6b7280; }
+.col-DQ .kanban-col-title::before            { background: #dc2626; }
 
 .kanban-count {
   font-size: 11px;
@@ -1295,7 +1299,8 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   overflow: visible;
 }
 
-#pane-messaging {
+#pane-messaging,
+#pane-sms {
   height: 100%;
   padding: 0;
   overflow: hidden;
