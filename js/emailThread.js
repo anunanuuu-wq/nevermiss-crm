@@ -100,6 +100,9 @@ async function loadAndRender(lead, container) {
     : '';
 
   container.innerHTML = `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+      <button class="btn btn-secondary btn-sm" id="etRefreshBtn" style="font-size:11px;padding:3px 10px">↻ Refresh</button>
+    </div>
     <div class="email-thread-list" id="emailBubbleList">${bubblesHtml}</div>
     <div class="email-compose">
       <div class="email-compose-label">Compose</div>
@@ -124,6 +127,9 @@ async function loadAndRender(lead, container) {
   // Scroll to bottom of thread
   const list = container.querySelector('#emailBubbleList');
   if (list) list.scrollTop = list.scrollHeight;
+
+  // Refresh handler
+  document.getElementById('etRefreshBtn')?.addEventListener('click', () => loadAndRender(lead, container));
 
   // Send handler
   document.getElementById('etSendBtn').addEventListener('click', async () => {
