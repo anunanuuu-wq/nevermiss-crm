@@ -396,26 +396,64 @@
 
     const now = new Date().toISOString();
 
-    // Write to leads table
-    const res = await sb(`leads?id=eq.${encodeURIComponent(leadId)}`, {
-      method: 'PATCH',
+    // 1. Insert into trial_agreement_signatures
+    const sigRes = await sb('trial_agreement_signatures', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=minimal' },
       body: JSON.stringify({
-        trial_agreement_signed:      true,
-        trial_agreement_signed_at:   now,
-        trial_agreement_signer_name: signer_name,
-        trial_setup_sent:            true,
-        contact_name:                contact_name,
-        phone:                       phone
+        lead_id:      leadId,
+        business_name: biz_name,
+        contact_name:  contact_name,
+        email:         email,
+        phone:         phone,
+        signer_name:   signer_name,
+        signed_at:     now,
       })
     });
 
-    if (!res.ok) {
+    if (!sigRes.ok) {
       signBtn.disabled  = false;
       signText.style.display = '';
       spinner.style.display  = 'none';
       alert('Something went wrong. Please try again or contact Anu at (808) 724-3713.');
       return;
     }
+
+    // 2. Update leads record
+    await sb(`leads?id=eq.${encodeURIComponent(leadId)}`, {
+      method: 'PATCH',
+      headers: { 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        trial_agreement_signed:      true,
+        trial_agreement_signed_at:   now,
+        trial_agreement_signer_name: signer_name,
+        trial_setup_sent:            true,
+        contact_name:                contact_name,
+        phone:                       phone,
+      })
+    });
+
+    // 3. Log a note
+    await sb('lead_notes', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        lead_id: leadId,
+        content: `Trial agreement signed by ${signer_name} on ${now.slice(0,10)}.`,
+      })
+    });
+
+    // 4. Send a notification
+    await sb('notifications', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        lead_id: leadId,
+        type:    'trial_signed',
+        message: `${biz_name} signed their free trial agreement (${signer_name}).`,
+        read:    false,
+      })
+    });
 
     hide('mainContent');
     show('successScreen');

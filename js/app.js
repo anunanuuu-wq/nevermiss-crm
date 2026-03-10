@@ -261,6 +261,7 @@ export async function openLead(id) {
           </div>
         </div>
         <div style="display:flex;gap:6px">
+          ${lead.trial_agreement_signed ? `<button class="btn btn-secondary btn-sm" id="panelViewTrialAgreement">View</button>` : ''}
           <button class="btn btn-primary btn-sm" id="panelSendTrialSetup" style="background:#166534;border-color:#166534">Send Trial Setup</button>
         </div>
       </div>
@@ -398,6 +399,20 @@ export async function openLead(id) {
         if (badge) badge.innerHTML = docStatusPill('sent');
       },
     });
+  });
+
+  // View trial agreement from lead panel
+  document.getElementById('panelViewTrialAgreement')?.addEventListener('click', async () => {
+    const { data, error } = await supabase
+      .from('trial_agreement_signatures')
+      .select('signer_name, signed_at, business_name, contact_name, email, phone')
+      .eq('lead_id', id)
+      .order('signed_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || !data) { alert('Could not load agreement details.'); return; }
+    const signedDate = new Date(data.signed_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    alert(`Trial Agreement\n\nSigned by: ${data.signer_name}\nDate: ${signedDate}\nBusiness: ${data.business_name}\nContact: ${data.contact_name}\nEmail: ${data.email}\nPhone: ${data.phone || '—'}`);
   });
 
   // Send trial setup (onboarding form + trial agreement) from lead panel
