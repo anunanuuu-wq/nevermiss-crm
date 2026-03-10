@@ -8,12 +8,15 @@
 -- ============================================================
 
 -- ── leads table additions ─────────────────────────────────────────────────────
--- Tracks whether the combined trial setup email (onboarding form + trial agreement)
--- has been sent from the CRM Documents pane "Send Trial Setup" button.
+-- Tracks trial setup email + agreement signature on the lead record.
+-- (Agreement is signed before an onboarding_submissions row exists.)
 
 ALTER TABLE leads
-  ADD COLUMN IF NOT EXISTS trial_setup_sent     BOOLEAN   DEFAULT FALSE,
-  ADD COLUMN IF NOT EXISTS trial_setup_sent_at  TIMESTAMPTZ;
+  ADD COLUMN IF NOT EXISTS trial_setup_sent            BOOLEAN   DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS trial_setup_sent_at         TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS trial_agreement_signed      BOOLEAN   DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS trial_agreement_signed_at   TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS trial_agreement_signer_name TEXT;
 
 -- ── onboarding_submissions table additions ────────────────────────────────────
 -- Tracks trial agreement signature and automated check-in milestones.
