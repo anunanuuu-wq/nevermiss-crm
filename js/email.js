@@ -9,8 +9,8 @@ const FROM_EMAIL = 'okama@nevermisshawaii.com';
 
 export async function sendEmail(to, subject, html) {
   try {
-    // Route through Netlify function to avoid CORS — Resend API cannot be called directly from browser
-    const res = await fetch('/.netlify/functions/send-email', {
+    // Route through Cloudflare Worker to avoid CORS — Resend API cannot be called directly from browser
+    const res = await fetch('https://nevermiss-workers.nevermiss.workers.dev/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ to, subject, html }),
