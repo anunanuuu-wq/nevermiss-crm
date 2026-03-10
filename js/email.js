@@ -99,9 +99,15 @@ export function showEmailModal({ to, subject, body, leadId, statusField, onSent 
     const result = await sendEmail(toVal, subjectVal, htmlBody);
 
     if (!result.ok) {
-      _toast('Failed to send: ' + result.error, true);
+      console.error('[NeverMiss] Email send failed:', result.error);
       sendBtn.disabled = false;
-      sendBtn.textContent = 'Send';
+      sendBtn.textContent = 'Failed — ' + result.error;
+      sendBtn.style.background = '#dc2626';
+      _toast('Failed to send: ' + result.error, true);
+      setTimeout(() => {
+        sendBtn.textContent = 'Send';
+        sendBtn.style.background = '';
+      }, 5000);
       return;
     }
 
