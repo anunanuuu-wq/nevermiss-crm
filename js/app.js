@@ -28,6 +28,10 @@ export function showToast(msg, isError = false) {
   t._timer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
+// ── Viewer (read-only) accounts ──────────────────────────────
+const VIEWER_EMAILS = ['ervinn.tangco@gmail.com'];
+window.IS_VIEWER = false;
+
 // ── Current pane state ───────────────────────────────────────
 let currentPane = 'dashboard';
 
@@ -293,8 +297,18 @@ export async function openLead(id) {
     </div>
   `;
 
+  // Disable all editable fields for viewer accounts
+  if (window.IS_VIEWER) {
+    body.querySelectorAll('.autosave').forEach(el => {
+      el.disabled = true;
+      el.style.opacity = '0.7';
+      el.style.cursor = 'not-allowed';
+    });
+  }
+
   // Auto-save on blur
   body.querySelectorAll('.autosave').forEach(el => {
+    if (window.IS_VIEWER) return;
     el.addEventListener('blur', async () => {
       const field = el.dataset.field;
       const value = el.value || null;
@@ -630,6 +644,12 @@ async function init() {
   document.getElementById('userInitials').textContent = initials;
   document.getElementById('userName').textContent = email.split('@')[0];
   document.getElementById('userEmail').textContent = email;
+
+  // Read-only mode for viewer accounts
+  if (VIEWER_EMAILS.includes(email.toLowerCase())) {
+    window.IS_VIEWER = true;
+    document.body.classList.add('readonly-mode');
+  }
 
   // Nav clicks
   document.querySelectorAll('.nav-item[data-pane]').forEach(el => {

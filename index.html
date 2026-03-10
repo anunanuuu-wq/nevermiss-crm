@@ -5,6 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeverMiss CRM</title>
   <link rel="stylesheet" href="css/app.css">
+  <style>
+    /* Read-only mode — hide all edit/delete controls for viewer accounts */
+    body.readonly-mode #btnAddLeadTop,
+    body.readonly-mode #btnDeleteLead,
+    body.readonly-mode #addLeadModal,
+    body.readonly-mode #addNoteBtn,
+    body.readonly-mode #newNoteInput,
+    body.readonly-mode .seq-day,
+    body.readonly-mode #seqActiveToggle { display: none !important; }
+    .readonly-banner { display: none; }
+    body.readonly-mode .readonly-banner {
+      display: block;
+      background: rgba(232,160,74,0.12);
+      border: 1px solid rgba(232,160,74,0.3);
+      color: #e8a04a;
+      font-size: 12px;
+      text-align: center;
+      padding: 6px 16px;
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 8px;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 
@@ -260,6 +287,7 @@
 
 <!-- Toast -->
 <div id="toast"></div>
+<div class="readonly-banner">View only — contact Anu to make changes</div>
 
 <!-- Scripts -->
 <script src="js/config.js"></script>
