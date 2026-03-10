@@ -251,6 +251,20 @@ export async function openLead(id) {
         </div>
       </div>
 
+      <!-- Trial Setup -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-secondary);margin-bottom:10px">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:5px">Trial Setup</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span id="panelTrialSetupBadge">${docStatusPill(lead.trial_setup_sent ? 'sent' : 'not sent')}</span>
+            ${lead.trial_agreement_signed ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#14532d22;color:#4ade80;border:1px solid #14532d44">✓ Agreement signed</span>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" id="panelSendTrialSetup" style="background:#166534;border-color:#166534">Send Trial Setup</button>
+        </div>
+      </div>
+
       <!-- Service Contract -->
       <div style="padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-secondary)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -381,6 +395,28 @@ export async function openLead(id) {
       onSent: () => {
         lead.onboarding_status = 'sent';
         const badge = document.getElementById('panelOnboardingBadge');
+        if (badge) badge.innerHTML = docStatusPill('sent');
+      },
+    });
+  });
+
+  // Send trial setup (onboarding form + trial agreement) from lead panel
+  document.getElementById('panelSendTrialSetup')?.addEventListener('click', () => {
+    const firstName = (lead.contact_name || '').split(' ')[0] || 'there';
+    const onboardingLink = `${window.location.origin}/onboarding.html?id=${id}`;
+    const trialLink = `${window.location.origin}/trial-agreement.html?id=${id}`;
+    showEmailModal({
+      to: lead.email || '',
+      subject: `Your NeverMiss free trial \u2014 2 quick things`,
+      body: `Hi ${firstName},\n\nExcited to get NeverMiss live for ${lead.business_name || 'your business'}. Two quick things before we start:\n\n1. Trial Agreement (takes 30 seconds):\n${trialLink}\n\n2. Setup Form (takes ~5 minutes):\n${onboardingLink}\n\nOnce both are done I\u2019ll have your AI receptionist live within 48 hours.\n\nOkeanu Kama\nNeverMiss Hawaii\nnevermisshawaii.com | (808) 724-3713`,
+      leadId: id,
+      onSent: async () => {
+        await supabase.from('leads').update({
+          trial_setup_sent: true,
+          trial_setup_sent_at: new Date().toISOString(),
+        }).eq('id', id);
+        lead.trial_setup_sent = true;
+        const badge = document.getElementById('panelTrialSetupBadge');
         if (badge) badge.innerHTML = docStatusPill('sent');
       },
     });
