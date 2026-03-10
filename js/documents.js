@@ -15,6 +15,10 @@ function buildOnboardingLink(id) {
   return `${window.location.origin}/onboarding.html?id=${id}`;
 }
 
+function buildTrialAgreementLink(id) {
+  return `${window.location.origin}/trial-agreement.html?id=${id}`;
+}
+
 function buildContractLink(id, setup, hours) {
   return `${window.location.origin}/contract.html?id=${id}&setup=${setup}&hours=${encodeURIComponent(hours)}`;
 }
@@ -76,7 +80,7 @@ export async function renderDocuments() {
 
   const { data: leads, error } = await supabase
     .from('leads')
-    .select('id, business_name, contact_name, email, onboarding_status, contract_status, pipeline_stage')
+    .select('id, business_name, contact_name, email, onboarding_status, contract_status, pipeline_stage, trial_setup_sent')
     .neq('pipeline_stage', 'DQ')
     .order('business_name');
 
@@ -87,6 +91,7 @@ export async function renderDocuments() {
   }
 
   const total              = leads?.length || 0;
+  const trialSetupSent     = leads?.filter(l => l.trial_setup_sent).length || 0;
   const onboardingSent     = leads?.filter(l => l.onboarding_status !== 'not sent').length || 0;
   const onboardingDone     = leads?.filter(l => l.onboarding_status === 'submitted').length || 0;
   const contractSigned     = leads?.filter(l => l.contract_status === 'signed').length || 0;
@@ -102,8 +107,8 @@ export async function renderDocuments() {
         <div class="stat-value">${total}</div>
       </div>
       <div class="stat-card" style="flex:1;min-width:130px">
-        <div class="stat-label">Onboarding Sent</div>
-        <div class="stat-value">${onboardingSent}</div>
+        <div class="stat-label">Trial Setup Sent</div>
+        <div class="stat-value">${trialSetupSent}</div>
       </div>
       <div class="stat-card" style="flex:1;min-width:130px">
         <div class="stat-label">Forms Submitted</div>
@@ -118,17 +123,17 @@ export async function renderDocuments() {
     <div class="table-wrap">
       <table style="width:100%;border-collapse:collapse;table-layout:fixed">
         <colgroup>
-          <col style="width:22%">
+          <col style="width:20%">
+          <col style="width:16%">
           <col style="width:14%">
-          <col style="width:12%">
           <col style="width:14%">
-          <col style="width:38%">
+          <col style="width:36%">
         </colgroup>
         <thead>
           <tr>
             <th>Business</th>
+            <th>Trial Setup</th>
             <th>Onboarding</th>
-            <th>Onboarding Link</th>
             <th>Contract</th>
             <th>Contract Link</th>
           </tr>
@@ -140,18 +145,18 @@ export async function renderDocuments() {
                 <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(lead.business_name)}</div>
                 <div style="font-size:11.5px;color:var(--text-muted)">${esc(lead.contact_name || '')}</div>
               </td>
+              <td class="trial-setup-cell">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  ${statusPill(lead.trial_setup_sent ? 'sent' : 'not sent', 'trial')}
+                  <button class="btn btn-primary btn-sm send-trial-setup" data-id="${lead.id}" style="white-space:nowrap;font-size:11px;padding:3px 8px;background:#16a34a;border-color:#16a34a">Send Trial Setup</button>
+                </div>
+              </td>
               <td class="onboarding-status-cell">
-                <div style="display:flex;align-items:center;gap:6px">
+                <div style="display:flex;flex-direction:column;gap:4px">
                   ${statusPill(lead.onboarding_status || 'not sent', 'onboarding')}
                   ${lead.onboarding_status === 'submitted'
                     ? `<button class="btn btn-secondary btn-sm view-onboarding" data-id="${lead.id}" style="white-space:nowrap;font-size:11px;padding:2px 8px">View</button>`
-                    : ''}
-                </div>
-              </td>
-              <td>
-                <div style="display:flex;gap:4px">
-                  <button class="btn btn-secondary btn-sm copy-onboarding" data-id="${lead.id}" style="white-space:nowrap">Copy</button>
-                  <button class="btn btn-primary btn-sm send-onboarding" data-id="${lead.id}" style="white-space:nowrap">Send</button>
+                    : `<button class="btn btn-secondary btn-sm send-onboarding" data-id="${lead.id}" style="white-space:nowrap;font-size:11px;padding:2px 8px">Send Form</button>`}
                 </div>
               </td>
               <td class="contract-status-cell">
@@ -179,6 +184,35 @@ export async function renderDocuments() {
   `;
 
   // ── Event listeners ────────────────────────────────────────
+
+  // Send Trial Setup (onboarding form + trial agreement in one email)
+  document.querySelectorAll('.send-trial-setup').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const lead = (leads || []).find(l => l.id === id);
+      const firstName = (lead?.contact_name || '').split(' ')[0] || 'there';
+      const onboardingLink = buildOnboardingLink(id);
+      const trialLink = buildTrialAgreementLink(id);
+      showEmailModal({
+        to: lead?.email || '',
+        subject: `Your NeverMiss free trial — 2 quick things`,
+        body: `Hi ${firstName},\n\nExcited to get NeverMiss live for ${lead?.business_name || 'you'}. Two quick things to kick off your free 14-day trial:\n\n1. Trial Agreement (takes 30 seconds):\n${trialLink}\n\n2. Setup Form (takes about 5 minutes — tells me your hours, booking style, what you want the AI to say):\n${onboardingLink}\n\nOnce I have both, I\u2019ll have everything configured and live on your phones within 48 hours. I\u2019ll send a test call first so you can hear it before it goes live.\n\nOkeanu Kama\nNeverMiss Hawaii\nnevermisshawaii.com | (808) 724-3713`,
+        leadId: id,
+        onSent: async () => {
+          const row = btn.closest('tr');
+          const trialCell = row?.querySelector('.trial-setup-cell');
+          if (lead) lead.trial_setup_sent = true;
+          if (trialCell) {
+            trialCell.querySelector('span').outerHTML = statusPill('sent', 'trial');
+          }
+          await supabase.from('leads').update({
+            trial_setup_sent: true,
+            trial_setup_sent_at: new Date().toISOString(),
+          }).eq('id', id);
+        },
+      });
+    });
+  });
 
   // Copy onboarding link
   document.querySelectorAll('.copy-onboarding').forEach(btn => {

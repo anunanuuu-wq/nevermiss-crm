@@ -477,16 +477,11 @@
         </div>
       </div>
 
-      <!-- Signature -->
+      <!-- Submit -->
       <div class="section-card">
         <div class="section-head">
           <div class="section-num">✓</div>
-          <div><div class="section-title">Sign & Submit</div></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Type Your Full Name to Sign <span class="req">*</span></label>
-          <input class="form-input" id="f_signer_name" required placeholder="John Kahananui" style="font-size:16px">
-          <div class="form-hint">By submitting, you confirm the information above is accurate</div>
+          <div><div class="section-title">Submit Setup Form</div></div>
         </div>
         <div style="background:var(--accent-l);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#4338ca;line-height:1.6">
           By submitting this form, you authorize NeverMiss Hawaii to configure an AI receptionist for your business using the information provided above.
@@ -553,7 +548,7 @@ document.querySelectorAll('[name="service_mode"]').forEach(r => {
 });
 
 // ── Progress bar ─────────────────────────────────────────────
-const requiredFields = ['f_business_name','f_industry','f_contact_name','f_contact_phone','f_contact_email','f_business_phone','f_signer_name'];
+const requiredFields = ['f_business_name','f_industry','f_contact_name','f_contact_phone','f_contact_email','f_business_phone'];
 function updateProgress() {
   const filled = requiredFields.filter(id => {
     const el = document.getElementById(id);
@@ -580,7 +575,6 @@ document.getElementById('onboardingForm').addEventListener('submit', async (e) =
     { id: 'f_contact_phone', label: 'Your Phone' },
     { id: 'f_contact_email', label: 'Your Email' },
     { id: 'f_business_phone', label: 'Business Phone' },
-    { id: 'f_signer_name',   label: 'Signature' },
   ];
 
   let valid = true;
@@ -641,7 +635,6 @@ document.getElementById('onboardingForm').addEventListener('submit', async (e) =
     best_test_time:   document.getElementById('f_test_time').value.trim(),
     ai_restrictions:  document.getElementById('f_ai_restrictions').value.trim(),
     additional_notes: document.getElementById('f_additional_notes').value.trim(),
-    signer_name:      document.getElementById('f_signer_name').value.trim(),
     signer_date:      new Date().toISOString().split('T')[0],
     status:           'submitted',
   };
@@ -657,7 +650,7 @@ document.getElementById('onboardingForm').addEventListener('submit', async (e) =
     // Add note to lead
     await supabase.from('lead_notes').insert({
       lead_id: leadId,
-      content: `Onboarding form submitted by ${payload.signer_name} on ${new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}. Mode: ${payload.service_mode === 'auto' ? 'Auto-Booking' : 'Lead Capture + Transfer'}. Go-live: ${payload.target_golive_date || 'TBD'}.`
+      content: `Onboarding form submitted by ${payload.contact_name} on ${new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}. Mode: ${payload.service_mode === 'auto' ? 'Auto-Booking' : 'Lead Capture + Transfer'}. Go-live: ${payload.target_golive_date || 'TBD'}.`
     });
 
     // Add notification
