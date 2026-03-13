@@ -248,6 +248,13 @@ ul { list-style: none; }
 .pane { display: none; }
 .pane.active { display: block; }
 
+#pane-pipeline {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px - 48px); /* viewport minus topbar (56px) and #content padding (24px × 2) */
+  overflow: hidden;
+}
+
 /* ── Buttons ────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
@@ -489,9 +496,11 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   display: flex;
   gap: 14px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: 16px;
-  align-items: flex-start;
-  min-height: calc(100vh - 160px);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 
 .kanban-col {
@@ -500,6 +509,9 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   background: var(--bg-tertiary);
   border-radius: var(--radius-md);
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .kanban-col-header {
@@ -550,7 +562,11 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   border-radius: 99px;
 }
 
-.kanban-cards { min-height: 60px; }
+.kanban-cards {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 60px;
+}
 
 .kanban-card {
   background: var(--bg-primary);
@@ -930,10 +946,13 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
 @media (max-width: 900px) {
   #sidebar { display: none; }
   #leadPanel { width: 100%; }
-  .kanban-board { padding-bottom: 80px; }
   .scripts-grid { grid-template-columns: 1fr; }
   .form-row, .form-row-3 { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: 1fr 1fr; }
+  #pane-pipeline { height: auto; }
+  .kanban-board { flex: none; min-height: calc(100vh - 160px); align-items: flex-start; overflow-y: visible; padding-bottom: 80px; }
+  .kanban-col { overflow: visible; }
+  .kanban-cards { flex: none; overflow-y: visible; }
 }
 
 /* ── Utilities ──────────────────────────────────────────────── */
