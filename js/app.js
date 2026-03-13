@@ -67,6 +67,9 @@ async function navigate(pane) {
   const paneEl = document.getElementById(`pane-${pane}`);
   if (paneEl) paneEl.classList.add('active');
 
+  // Pipeline needs #content to be a flex column so kanban columns scroll independently
+  document.getElementById('content').classList.toggle('pipeline-mode', pane === 'pipeline');
+
   currentPane = pane;
   await PANES[pane].render();
 }

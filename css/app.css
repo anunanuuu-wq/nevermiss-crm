@@ -248,10 +248,20 @@ ul { list-style: none; }
 .pane { display: none; }
 .pane.active { display: block; }
 
-#pane-pipeline {
+/* Pipeline: #content becomes a flex column so kanban fills remaining height */
+#content.pipeline-mode {
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 56px - 48px); /* viewport minus topbar (56px) and #content padding (24px × 2) */
+  padding-bottom: 0; /* bottom padding handled by kanban-board */
+}
+
+/* Higher specificity than .pane.active { display: block } */
+#content.pipeline-mode #pane-pipeline {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -949,7 +959,8 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent);
   .scripts-grid { grid-template-columns: 1fr; }
   .form-row, .form-row-3 { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: 1fr 1fr; }
-  #pane-pipeline { height: auto; }
+  #content.pipeline-mode { overflow-y: auto; display: block; }
+  #content.pipeline-mode #pane-pipeline { flex: none; overflow: visible; }
   .kanban-board { flex: none; min-height: calc(100vh - 160px); align-items: flex-start; overflow-y: visible; padding-bottom: 80px; }
   .kanban-col { overflow: visible; }
   .kanban-cards { flex: none; overflow-y: visible; }
